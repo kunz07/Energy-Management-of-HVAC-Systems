@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>Icons/calendar.png</file>
+    <file>Icons/clock.png</file>
+    <file>Icons/cloudy.png</file>
+    <file>Icons/door-key.png</file>
+    <file>Icons/thermometer.png</file>
+    <file>Icons/user.png</file>
+  </qresource>
+</RCC>

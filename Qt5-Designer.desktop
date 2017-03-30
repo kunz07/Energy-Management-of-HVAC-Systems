@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Qt5 Designer
+Icon=/home/kunal/Pictures/icons/qt5-designer.png
+Exec=/usr/lib/x86_64-linux-gnu/qt5/bin/designer
+Type=Application
+Categories=Application
+Terminal=false
+StartupNotify=true
+Actions=NewWindow
+
+
+Name[en_IN]=Qt5-Designer
+
+[Desktop Action NewWindow]
+Name=Open a New Window
+Exec=/usr/lib/x86_64-linux-gnu/qt5/bin/designer

@@ -87,3 +87,17 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+#My files
+Adafruit_Python_MCP3008/
+Adafruit_Python_SSD1306/
+forecastiopy3/
+matplotlib-master/
+share/
+bin/
+
+pip-selfcheck.json
+TS_APIkey.txt
+ThingSpeak Fields.txt
+Ubidots_APIkey.txt
+DS_APIkey.txt
