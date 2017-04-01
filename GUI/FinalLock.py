@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'hourtest.ui'
+# Form implementation generated from reading ui file 'howmanylocks.ui'
 #
 # Created by: PyQt5 UI code generator 5.8.1
 #
@@ -14,7 +14,7 @@ class Ui_UserText(object):
         UserText.resize(400, 388)
         UserText.setStyleSheet("background-color: rgb(44, 0, 30);")
         self.login = QtWidgets.QPushButton(UserText)
-        self.login.setGeometry(QtCore.QRect(179, 350, 75, 27))
+        self.login.setGeometry(QtCore.QRect(160, 350, 75, 27))
         self.login.setStyleSheet("color: rgb(255, 255, 255);\n"
 "font: 11pt \"Big John\";")
         self.login.setObjectName("login")
@@ -33,7 +33,7 @@ class Ui_UserText(object):
         self.fuzzysystem.setStyleSheet("font: 22pt \"Peace Sans\";")
         self.fuzzysystem.setObjectName("fuzzysystem")
         self.message = QtWidgets.QLabel(UserText)
-        self.message.setGeometry(QtCore.QRect(100, 330, 221, 20))
+        self.message.setGeometry(QtCore.QRect(90, 330, 221, 20))
         self.message.setStyleSheet("font: 10pt \"Ubuntu Mono\";\n"
 "color: rgb(255, 0, 0);")
         self.message.setObjectName("message")
@@ -41,7 +41,7 @@ class Ui_UserText(object):
         self.message.setAlignment(QtCore.Qt.AlignHCenter)
         
         self.layoutWidget = QtWidgets.QWidget(UserText)
-        self.layoutWidget.setGeometry(QtCore.QRect(70, 250, 273, 34))
+        self.layoutWidget.setGeometry(QtCore.QRect(60, 250, 273, 34))
         self.layoutWidget.setObjectName("layoutWidget")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -58,15 +58,14 @@ class Ui_UserText(object):
         self.usertext.setStyleSheet("color: rgb(174, 167, 159);\n"
 "background-color: rgb(44, 0, 30);\n"
 "selection-background-color: rgb(85, 170, 255);\n"
-"border: none")
+"border: none;\n" "font: 11pt \"Moon\";")
         self.usertext.setPlaceholderText("Enter Username")
         self.usertext.setObjectName("usertext")
-
         self.usertext.setMaxLength(10)
         
         self.horizontalLayout_3.addWidget(self.usertext)
         self.layoutWidget1 = QtWidgets.QWidget(UserText)
-        self.layoutWidget1.setGeometry(QtCore.QRect(70, 290, 278, 34))
+        self.layoutWidget1.setGeometry(QtCore.QRect(60, 290, 278, 34))
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.layoutWidget1)
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
@@ -83,22 +82,21 @@ class Ui_UserText(object):
         self.passtext.setStyleSheet("color: rgb(174, 167, 159);\n"
 "background-color: rgb(44, 0, 30);\n"
 "selection-background-color: rgb(85, 170, 255);\n"
-"border: none")
+"border: none;\n" "font: 11pt \"Moon\";")
         self.passtext.setPlaceholderText("Enter Password")
         self.passtext.setObjectName("passtext")
-
         self.passtext.setMaxLength(10)
         self.passtext.setEchoMode(2)
         
         self.horizontalLayout_4.addWidget(self.passtext)
         self.time_hours = QtWidgets.QLabel(UserText)
-        self.time_hours.setGeometry(QtCore.QRect(196, 90, 101, 137))
+        self.time_hours.setGeometry(QtCore.QRect(196, 70, 101, 135))
         self.time_hours.setStyleSheet("font: 76pt \"Slim Joe\";\n"
 "color:rgb(174, 167, 159)")
         self.time_hours.setObjectName("time_hours")
         self.time_min = QtWidgets.QLabel(UserText)
-        self.time_min.setGeometry(QtCore.QRect(310, 110, 67, 41))
-        self.time_min.setStyleSheet("font: 26pt \"Big John\";\n"
+        self.time_min.setGeometry(QtCore.QRect(310, 90, 67, 41))
+        self.time_min.setStyleSheet("font: 30pt \"Big John\";\n"
 "color:rgb(174, 167, 159)")
         self.time_min.setText("")
         self.time_min.setObjectName("time_min")
@@ -111,12 +109,11 @@ class Ui_UserText(object):
         self.timer1.start()
         
         self.date = QtWidgets.QLabel(UserText)
-        self.date.setGeometry(QtCore.QRect(300, 160, 101, 21))
+        self.date.setGeometry(QtCore.QRect(300, 140, 101, 21))
         self.date.setStyleSheet("font: 10pt \"Big John\";\n"
 "color:rgb(174, 167, 159)")
         self.date.setText("")
         self.date.setObjectName("date")
-
         self.date.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.timer2 = QtCore.QTimer()
         self.timer2.setInterval(1000)
@@ -140,7 +137,7 @@ class Ui_UserText(object):
         self.time_hours.setText(_translate("UserText", "<html><head/><body><p align=\"right\"><br/></p></body></html>"))
 
     def Time(self):
-        self.time_hours.setText(QtCore.QTime.currentTime().toString("hh"))
+        self.time_hours.setText(QtCore.QTime.currentTime().toString("h"))
         self.time_min.setText(QtCore.QTime.currentTime().toString("mm"))
 
     def Date(self):

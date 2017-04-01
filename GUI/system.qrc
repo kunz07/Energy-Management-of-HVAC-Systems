@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>Icons/battery.png</file>
+    <file>Icons/thermometer.png</file>
+    <file>Icons/cloudy.png</file>
+  </qresource>
+</RCC>

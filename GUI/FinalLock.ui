@@ -19,7 +19,7 @@
   <widget class="QPushButton" name="login">
    <property name="geometry">
     <rect>
-     <x>179</x>
+     <x>160</x>
      <y>350</y>
      <width>75</width>
      <height>27</height>
@@ -61,7 +61,7 @@ font: 11pt &quot;Big John&quot;;</string>
   <widget class="QLabel" name="message">
    <property name="geometry">
     <rect>
-     <x>100</x>
+     <x>90</x>
      <y>330</y>
      <width>221</width>
      <height>20</height>
@@ -78,7 +78,7 @@ color: rgb(255, 0, 0);</string>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>60</x>
      <y>250</y>
      <width>273</width>
      <height>34</height>
@@ -124,7 +124,7 @@ border: none</string>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>60</x>
      <y>290</y>
      <width>278</width>
      <height>34</height>
@@ -168,7 +168,7 @@ border: none</string>
    <property name="geometry">
     <rect>
      <x>196</x>
-     <y>90</y>
+     <y>70</y>
      <width>101</width>
      <height>121</height>
     </rect>
@@ -185,7 +185,7 @@ color:rgb(174, 167, 159)</string>
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>110</y>
+     <y>90</y>
      <width>67</width>
      <height>41</height>
     </rect>
@@ -202,7 +202,7 @@ color:rgb(174, 167, 159)</string>
    <property name="geometry">
     <rect>
      <x>300</x>
-     <y>160</y>
+     <y>140</y>
      <width>101</width>
      <height>21</height>
     </rect>
