@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>Icons/rotate.png</file>
     <file>Icons/battery.png</file>
     <file>Icons/thermometer.png</file>
     <file>Icons/cloudy.png</file>
