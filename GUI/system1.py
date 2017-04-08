@@ -13,10 +13,9 @@ import datetime
 import sys
 from ubidots import ApiClient
 import time
-
+import webbrowser
 
 class Ui_system(object):
-    display_update = QtCore.pyqtSignal()
     def setupUi(self, system):
         system.setObjectName("system")
         system.resize(800, 600)
@@ -68,9 +67,6 @@ class Ui_system(object):
         self.run_system.setStyleSheet("color: rgb(255, 255, 255);\n"
 "font: 11pt \"Big John\";")
         self.run_system.setObjectName("run_system")
-
-        
-        
         self.avg_temp = QtWidgets.QLabel(self.Fuzzy_system)
         self.avg_temp.setGeometry(QtCore.QRect(0, 100, 121, 51))
         self.avg_temp.setStyleSheet("font: 75 32pt \"Moon\";\n"
@@ -110,7 +106,10 @@ class Ui_system(object):
         self.battery_percent.setGeometry(QtCore.QRect(120, 250, 221, 32))
         self.battery_percent.setStyleSheet("font: 75 11pt \"Moon\";\n"
 "color: rgb(200, 226, 240);")
-        self.battery_percent.setObjectName("battery_percent")
+
+        self.battery_percent.clicked.connect(self.Batt_Percent)
+        
+        self.battery_percent.setObjectName("battery_percent")        
         self.batt_icon = QtWidgets.QLabel(self.Fuzzy_system)
         self.batt_icon.setGeometry(QtCore.QRect(340, 250, 32, 32))
         self.batt_icon.setStyleSheet("font: 26pt \"Big John\";\n"
@@ -126,6 +125,9 @@ class Ui_system(object):
         self.average_cloud_cover.setStyleSheet("font: 75 11pt \"Moon\";\n"
 "color: rgb(200, 226, 240);")
         self.average_cloud_cover.setObjectName("average_cloud_cover")
+
+        self.average_cloud_cover.clicked.connect(self.Avg_CC)
+        
         self.defuzz = QtWidgets.QLabel(self.Fuzzy_system)
         self.defuzz.setGeometry(QtCore.QRect(240, 380, 161, 71))
         self.defuzz.setStyleSheet("font: 40pt \"Big John\";\n"
@@ -146,16 +148,25 @@ class Ui_system(object):
         self.temperature.setStyleSheet("color:rgb(200, 226, 240);\n"
 "font: 75 11pt \"Moon\";")
         self.temperature.setObjectName("temperature")
+
+        self.temperature.clicked.connect(self.DarkSky)
+        
         self.average_temperature = QtWidgets.QPushButton(self.Fuzzy_system)
         self.average_temperature.setGeometry(QtCore.QRect(120, 110, 221, 32))
         self.average_temperature.setStyleSheet("font: 75 11pt \"Moon\";\n"
 "color: rgb(200, 226, 240);")
         self.average_temperature.setObjectName("average_temperature")
+
+        self.average_temperature.clicked.connect(self.Avg_temp)
+        
         self.cloud_cover = QtWidgets.QPushButton(self.Fuzzy_system)
         self.cloud_cover.setGeometry(QtCore.QRect(500, 270, 161, 26))
         self.cloud_cover.setStyleSheet("color:rgb(200, 226, 240);\n"
 "font: 75 11pt \"Moon\";")
         self.cloud_cover.setObjectName("cloud_cover")
+
+        self.cloud_cover.clicked.connect(self.DarkSky)
+        
         self.temp = QtWidgets.QLabel(self.Fuzzy_system)
         self.temp.setGeometry(QtCore.QRect(662, 180, 131, 61))
         self.temp.setStyleSheet("font: 75 32pt \"Moon\";\n"
@@ -399,7 +410,7 @@ class Ui_system(object):
         self.open_ubidots.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">OPEN IN WEB BROWSER</span></p></body></html>"))
         self.open_ubidots.setText(_translate("system", "OPEN UBIDOTS"))
         system.setItemText(system.indexOf(self.Room_Conditions), _translate("system", "Page 2"))
-
+        
     def Time(self):
         self.time_hours.setText(QtCore.QTime.currentTime().toString("h"))
         self.time_min.setText(QtCore.QTime.currentTime().toString("mm"))
@@ -454,7 +465,7 @@ class Ui_system(object):
             print('Value not sent')
         
         self.avg_temp.setText('{:0.01f}°'.format(tempc))
-        self.avg_cc.setText('{}%'.format(clouds*100))
+        self.avg_cc.setText('{}%'.format(int(clouds*100)))
         self.avg_batt.setText('{}%'.format(battery))
                 
     def Update_Battery(self):
@@ -496,7 +507,19 @@ class Ui_system(object):
             self.cc.setText('{}%'.format(int(currently.cloudCover * 100)))
         else:
             print('No Currently data')
-                
+
+    def DarkSky(self):
+        webbrowser.open('https://darksky.net', new = 2)
+
+    def Batt_Percent(self):
+        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/R2kbUV5P5DSJVlXdTfMOXflxNtM', new = 2)
+
+    def Avg_CC(self):
+        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/0f62Hh2lV0PMO8-p_X7DYFyNnd4', new = 2)
+
+    def Avg_temp(self):
+        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/DlD6wC0uiipZzD3nbBT_Xty6myk', new = 2)
+
 import system_rc
 
 if __name__ == "__main__":
