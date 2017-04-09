@@ -3,6 +3,8 @@
 # Author: Kunal Jagadeesh
 # License: Public Domain
 
+import matplotlib
+matplotlib.use('TkAgg')
 import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
@@ -10,7 +12,7 @@ from skfuzzy import control as ctrl
 # New Antecedent/Consequent objects hold universe variables and membership
 # functions
 batt_percent = ctrl.Antecedent(np.arange(0, 101, 1), 'Battery_percentage')
-temp = ctrl.Antecedent(np.arange(15, 30, 1), 'Temperature')
+temp = ctrl.Antecedent(np.arange(15, 35, 1), 'Temperature')
 cloud_cover = ctrl.Antecedent(np.arange(0, 1, 0.01), 'Cloud_cover')
 eco_level = ctrl.Consequent(np.arange(1, 4, 0.01), 'Economy_level')
 
@@ -20,9 +22,9 @@ batt_percent['Medium_battery'] = fuzz.trapmf(batt_percent.universe, [20, 25, 75,
 batt_percent['High_battery'] = fuzz.trapmf(batt_percent.universe, [75, 80, 100, 100])
 
 # Temperature membership function population
-temp['Low_temperature'] = fuzz.trapmf(temp.universe, [0, 0, 18, 20])
-temp['Medium_temperature'] = fuzz.trapmf(temp.universe, [18, 20, 24, 26])
-temp['High_temperature'] = fuzz.trapmf(temp.universe, [24 , 26, 30, 30])
+temp['Low_temperature'] = fuzz.trapmf(temp.universe, [0, 0, 20, 22])
+temp['Medium_temperature'] = fuzz.trapmf(temp.universe, [20, 23, 27, 30])
+temp['High_temperature'] = fuzz.trapmf(temp.universe, [28 , 30, 35, 35])
 
 # Cloud_cover membership function population
 cloud_cover['Minimum_clouds'] = fuzz.trapmf(cloud_cover.universe, [0, 0, 0.20, 0.25])

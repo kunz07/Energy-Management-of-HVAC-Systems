@@ -95,6 +95,8 @@ forecastiopy3/
 matplotlib-master/
 share/
 bin/
+GUI/TS_APIkey.txt
+GUI/Ubidots_APIkey.txt
 
 pip-selfcheck.json
 TS_APIkey.txt

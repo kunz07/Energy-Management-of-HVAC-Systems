@@ -55,9 +55,11 @@ def sendForecast():
         time.sleep(2)
     except:
         print('Value not sent')
+	
+    return(tempc, clouds)
 
 if __name__ == "__main__":
     while True:
-        sendForecast()
+        temp, clouds = sendForecast()
         time.sleep(5)
     
