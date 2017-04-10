@@ -18,6 +18,10 @@ from ubidots import ApiClient
 import time
 import webbrowser
 from threading import Thread
+import numpy as np
+import skfuzzy as fuzz
+from skfuzzy import control as ctrl
+import os.path
 
 class MovieSplashScreen(QSplashScreen):
 
@@ -53,11 +57,15 @@ class MovieSplashScreen(QSplashScreen):
 class Ui_system(object):
     done1 = False
     done2 = False
-    
+    done3 = False
+    t = 0
+    c = 0
+    b = 0
+    eco = 0
     def setupUi(self, system):
         system.setObjectName("system")
         system.resize(800, 600)
-        system.setToolTip("")
+        system.setWindowTitle("Energy Management System")
         system.setStyleSheet("background-color: rgb(44, 0, 30);")
         self.Fuzzy_system = QtWidgets.QWidget()
         self.Fuzzy_system.setEnabled(True)
@@ -170,25 +178,28 @@ class Ui_system(object):
         self.defuzz.setGeometry(QtCore.QRect(240, 380, 161, 71))
         self.defuzz.setStyleSheet("font: 40pt \"Big John\";\n"
 "color:rgb(238, 247, 251);")
-        self.defuzz.setObjectName("defuzz")
+        self.defuzz.setObjectName("defuzz")        
         self.defuzzification = QtWidgets.QPushButton(self.Fuzzy_system)
         self.defuzzification.setGeometry(QtCore.QRect(50, 400, 179, 32))
         self.defuzzification.setStyleSheet("font: 11pt \"Peace Sans\";\n"
 "color: rgb(34, 139, 34)")
         self.defuzzification.setObjectName("defuzzification")
+
+        self.defuzzification.clicked.connect(self.Defuzz)
+        
         self.economy_level = QtWidgets.QPushButton(self.Fuzzy_system)
         self.economy_level.setGeometry(QtCore.QRect(450, 400, 179, 32))
         self.economy_level.setStyleSheet("font: 11pt \"Peace Sans\";\n"
 "color: rgb(34, 139, 34)")
         self.economy_level.setObjectName("economy_level")
+
+        self.economy_level.clicked.connect(self.Eco)
+        
         self.temperature = QtWidgets.QPushButton(self.Fuzzy_system)
         self.temperature.setGeometry(QtCore.QRect(500, 200, 161, 26))
         self.temperature.setStyleSheet("color:rgb(200, 226, 240);\n"
 "font: 75 11pt \"Moon\";")
         self.temperature.setObjectName("temperature")
-
-        self.temperature.clicked.connect(self.DarkSky)
-        
         self.average_temperature = QtWidgets.QPushButton(self.Fuzzy_system)
         self.average_temperature.setGeometry(QtCore.QRect(120, 110, 221, 32))
         self.average_temperature.setStyleSheet("font: 75 11pt \"Moon\";\n"
@@ -394,20 +405,20 @@ class Ui_system(object):
         self.temp_icon.setText(_translate("system", "<html><head/><body><p><img src=\":/icons/Icons/thermometer.png\"/></p></body></html>"))
         self.avg_cc.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
         self.avg_batt.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
-        self.battery_percent.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW MEMBERSHIP FUNCTION</span></p></body></html>"))
+        self.battery_percent.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT</span></p></body></html>"))
         self.battery_percent.setText(_translate("system", "BATTERY PERCENTAGE"))
         self.batt_icon.setText(_translate("system", "<html><head/><body><p><img src=\":/icons/Icons/battery.png\"/></p></body></html>"))
         self.cloud_icon.setText(_translate("system", "<html><head/><body><p><img src=\":/icons/Icons/cloudy.png\"/></p></body></html>"))
-        self.average_cloud_cover.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW MEMBERSHIP FUNCTION</span></p></body></html>"))
+        self.average_cloud_cover.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT</span></p></body></html>"))
         self.average_cloud_cover.setText(_translate("system", "AVERAGE CLOUD COVER"))
         self.defuzz.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
-        self.defuzzification.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">VIEW MEMBERSHIP FUNCTION</span></p></body></html>"))
+        self.defuzzification.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">COMPUTE VALUE</span></p></body></html>"))
         self.defuzzification.setText(_translate("system", "DEFUZZIFICATION"))
-        self.economy_level.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT</span></p></body></html>"))
+        self.economy_level.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">OPEN LOG DATA</span></p></body></html>"))
         self.economy_level.setText(_translate("system", "ECONOMY LEVEL"))
         self.temperature.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">WEATHER FORECAST</span></p></body></html>"))
         self.temperature.setText(_translate("system", "TEMPERATURE"))
-        self.average_temperature.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420; border:none;\">VIEW MEMBERSHIP FUNCTION</span></p></body></html>"))
+        self.average_temperature.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420; border:none;\">VIEW PLOT</span></p></body></html>"))
         self.average_temperature.setText(_translate("system", "AVERAGE TEMPERATURE"))
         self.cloud_cover.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">WEATHER FORECAST</span></p></body></html>"))
         self.cloud_cover.setText(_translate("system", "CLOUD COVER"))
@@ -498,7 +509,6 @@ class Ui_system(object):
                                         )
         tempc = 0
         clouds = 0
-        
         if fio.has_hourly() is True:
             hourly = FIOHourly.FIOHourly(fio)
             for hour in range(0, 48):
@@ -507,20 +517,20 @@ class Ui_system(object):
         else:
             print('No Hourly data')
 
-        tempc = round(tempc / 48, 2)
-        clouds = round(clouds / 48, 2)
-        battery = 90
+        self.t = round(tempc / 48, 2)
+        self.c = round(clouds / 48, 2)
+        self.b = 10
         try:
-            temp.save_value({'value': tempc})
-            cloud_cover.save_value({'value': clouds})
-            batt.save_value({'value': battery})
+            temp.save_value({'value': self.t})
+            cloud_cover.save_value({'value': self.c})
+            batt.save_value({'value': self.b})
             time.sleep(1)
         except:
             print('Value not sent')
         
-        self.avg_temp.setText('{:0.01f}°'.format(tempc))
-        self.avg_cc.setText('{}%'.format(int(clouds*100)))
-        self.avg_batt.setText('{}%'.format(battery))
+        self.avg_temp.setText('{:0.01f}°'.format(self.t))
+        self.avg_cc.setText('{}%'.format(int(self.c*100)))
+        self.avg_batt.setText('{}%'.format(self.b))
         
         self.done1 = True
 
@@ -594,6 +604,135 @@ class Ui_system(object):
     def Avg_temp(self):
         webbrowser.open('https://app.ubidots.com/ubi/getchart/page/DlD6wC0uiipZzD3nbBT_Xty6myk', new = 2)
 
+    def Defuzz(self):
+        # New Antecedent/Consequent objects hold universe variables and membership
+        # functions
+        batt_percent = ctrl.Antecedent(np.arange(0, 100, 1), 'Battery_percentage')
+        temp = ctrl.Antecedent(np.arange(15, 30, 1), 'Temperature')
+        cloud_cover = ctrl.Antecedent(np.arange(0, 1, 0.01), 'Cloud_cover')
+        eco_level = ctrl.Consequent(np.arange(1, 4, 0.01), 'Economy_level')
+
+        # Battery membership function population
+        batt_percent['Low_battery'] = fuzz.trapmf(batt_percent.universe, [0, 0, 20, 30])
+        batt_percent['Medium_battery'] = fuzz.trapmf(batt_percent.universe, [20, 25, 75, 80])
+        batt_percent['High_battery'] = fuzz.trapmf(batt_percent.universe, [75, 80, 100, 100])
+
+        # Temperature membership function population
+        temp['Low_temperature'] = fuzz.trapmf(temp.universe, [0, 0, 18, 20])
+        temp['Medium_temperature'] = fuzz.trapmf(temp.universe, [18, 20, 24, 26])
+        temp['High_temperature'] = fuzz.trapmf(temp.universe, [24 , 26, 30, 30])
+
+        # Cloud_cover membership function population
+        cloud_cover['Minimum_clouds'] = fuzz.trapmf(cloud_cover.universe, [0, 0, 0.20, 0.25])
+        cloud_cover['Medium_clouds'] = fuzz.trapmf(cloud_cover.universe, [0.20, 0.25, 0.65, 0.70])
+        cloud_cover['High_clouds'] = fuzz.trapmf(cloud_cover.universe, [0.65, 0.70, 1, 1])
+
+        # Custom membership functions can be built interactively with a familiar,
+        # Pythonic API
+        eco_level['Critical'] = fuzz.trimf(eco_level.universe, [0, 1.0, 2.0])
+        eco_level['Alert'] = fuzz.trimf(eco_level.universe, [1.75, 2.25, 2.75])
+        eco_level['Normal'] = fuzz.trimf(eco_level.universe, [2.5, 3.0, 3.5])
+        eco_level['Economyless'] = fuzz.trimf(eco_level.universe, [3.25, 4.0, 5.0])
+
+        # Rules
+        rule1 = ctrl.Rule(batt_percent['Low_battery'] &
+                          (~temp['High_temperature']),
+                          eco_level['Critical'])
+        rule2 = ctrl.Rule(batt_percent['Low_battery'] &
+                          temp['High_temperature'] &
+                          cloud_cover['High_clouds'],
+                          eco_level['Critical'])
+        rule3 = ctrl.Rule(batt_percent['Low_battery'] &
+                          temp['High_temperature'] &
+                          (~cloud_cover['High_clouds']),
+                          eco_level['Alert'])
+        rule4 = ctrl.Rule(batt_percent['Medium_battery'] &
+                          temp['Low_temperature'] &
+                          (~cloud_cover['High_clouds']),
+                          eco_level['Alert'])
+        rule5 = ctrl.Rule(batt_percent['Medium_battery'] &
+                          temp['Low_temperature'] &
+                          cloud_cover['High_clouds'],
+                          eco_level['Critical'])
+        rule6 = ctrl.Rule(batt_percent['Medium_battery'] &
+                          (~temp['Low_temperature']) &
+                          (~cloud_cover['High_clouds']),
+                          eco_level['Normal'])
+        rule7 = ctrl.Rule(batt_percent['Medium_battery'] &
+                          (~temp['Low_temperature']) &
+                          cloud_cover['High_clouds'],
+                          eco_level['Alert'])
+        rule8 = ctrl.Rule(batt_percent['High_battery'] &
+                          temp['Low_temperature'] &
+                          (~cloud_cover['High_clouds']),
+                          eco_level['Normal'])
+        rule9 = ctrl.Rule(batt_percent['High_battery'] &
+                          temp['Low_temperature'] &
+                          cloud_cover['High_clouds'],
+                          eco_level['Alert'])
+        rule10 = ctrl.Rule(batt_percent['High_battery'] &
+                          (~temp['Low_temperature']) &
+                          (~cloud_cover['High_clouds']),
+                          eco_level['Economyless'])
+        rule11 = ctrl.Rule(batt_percent['High_battery'] &
+                          (~temp['Low_temperature']) &
+                          cloud_cover['High_clouds'],
+                          eco_level['Normal'])
+
+        eco_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4,
+                                           rule5, rule6, rule7, rule8,
+                                           rule9, rule10, rule11])
+
+        eco_mode = ctrl.ControlSystemSimulation(eco_ctrl)
+
+        # Pass inputs to the ControlSystem using Antecedent labels with Pythonic API
+        # Note: if you like passing many inputs all at once, use .inputs(dict_of_data)
+        
+        eco_mode.input['Temperature'] = self.t
+        eco_mode.input['Cloud_cover'] = self.c
+        eco_mode.input['Battery_percentage'] = self.b
+
+        # Crunch the numbers
+        eco_mode.compute()
+
+        defuzz = eco_mode.output['Economy_level']
+
+        self.defuzz.setText(format(defuzz,'.2f'))
+        self.eco = int(defuzz + 0.5)
+
+    def Eco(self):
+        if (self.eco < 1):
+            self.eco = 1 
+            self.eco_level.setNum(self.eco)
+            filename1 = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+            save_path = 'Logs/'
+            complete_path = os.path.join(save_path, filename1+'.txt')
+            f = open(complete_path, 'w')
+            if (self.t == 0) or (self.c == 0) or (self.b == 0):
+                f.write('Data Unavailable, running in economy level 1')
+            else:
+                f.write('Average Temperature is: ' + str(self.t) + '\n')
+                f.write('Average Cloud Cover is: ' + str(self.c) + '\n')
+                f.write('Battery level is: ' + str(self.b) + '\n')
+                f.write('Economy Level is: ' + str(self.eco) + '\n')
+                f.close()
+            
+        else:
+            self.eco_level.setNum(self.eco)
+            filename1 = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+            save_path = 'Logs/'
+            complete_path = os.path.join(save_path, filename1+'.txt')
+            f = open(complete_path, 'w')
+            if (self.t == 0) or (self.c == 0) or (self.b == 0):
+                f.write('Data Unavailable, running in economy level 1')
+            else:
+                f.write('Average Temperature is: ' + str(self.t) + '\n')
+                f.write('Average Cloud Cover is: ' + str(self.c) + '\n')
+                f.write('Battery level is: ' + str(self.b) + '\n')
+                f.write('Economy Level is: ' + str(self.eco) + '\n')
+                f.close()
+        
+        
 import system_rc
 
 if __name__ == "__main__":
@@ -602,6 +741,7 @@ if __name__ == "__main__":
     system = QtWidgets.QToolBox()
     ui = Ui_system()
     ui.setupUi(system)
+    system.move(QApplication.desktop().screen().rect().center() - system.rect().center())
     system.show()
     sys.exit(app.exec_())
 
