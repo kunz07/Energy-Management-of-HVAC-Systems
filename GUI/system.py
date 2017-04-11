@@ -22,6 +22,7 @@ import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import os.path
+import serial
 
 class MovieSplashScreen(QSplashScreen):
 
@@ -62,6 +63,8 @@ class Ui_system(object):
     c = 0
     b = 0
     eco = 0
+    roomt = 0
+    roomh = 0
     def setupUi(self, system):
         system.setObjectName("system")
         system.resize(800, 600)
@@ -113,11 +116,13 @@ class Ui_system(object):
         self.run_system.setStyleSheet("color: rgb(255, 255, 255);\n"
 "font: 11pt \"Big John\";")
         self.run_system.setObjectName("run_system")
+
+        self.run_system.clicked.connect(self.Run_System)
+        
         self.avg_temp = QtWidgets.QLabel(self.Fuzzy_system)
         self.avg_temp.setGeometry(QtCore.QRect(0, 100, 121, 51))
         self.avg_temp.setStyleSheet("font: 75 32pt \"Moon\";\n"
 "color:rgbrgb(85, 85, 255);")
-        self.avg_temp.setText("")
         self.avg_temp.setObjectName("avg_temp")
 
         self.avg_temp.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
@@ -296,21 +301,33 @@ class Ui_system(object):
         self.room_temp.setStyleSheet("font: 75 32pt \"Moon\";\n"
 "color:rgb(238, 247, 251);")
         self.room_temp.setObjectName("room_temp")
+
+        self.room_temp.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        
         self.room_humidity = QtWidgets.QPushButton(self.Room_Conditions)
         self.room_humidity.setGeometry(QtCore.QRect(490, 110, 161, 26))
         self.room_humidity.setStyleSheet("color:rgb(233, 99, 94);\n"
 "font: 75 11pt \"Moon\";")
         self.room_humidity.setObjectName("room_humidity")
+
+        self.room_humidity.clicked.connect(self.Room_hum)
+        
         self.room_humidity_2 = QtWidgets.QLabel(self.Room_Conditions)
         self.room_humidity_2.setGeometry(QtCore.QRect(660, 90, 131, 61))
         self.room_humidity_2.setStyleSheet("font: 75 32pt \"Moon\";\n"
 "color:rgb(238, 247, 251);")
         self.room_humidity_2.setObjectName("room_humidity_2")
+
+        self.room_humidity_2.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        
         self.room_temperature = QtWidgets.QPushButton(self.Room_Conditions)
         self.room_temperature.setGeometry(QtCore.QRect(140, 110, 161, 26))
         self.room_temperature.setStyleSheet("color:rgb(233, 99, 94);\n"
 "font: 75 11pt \"Moon\";")
         self.room_temperature.setObjectName("room_temperature")
+
+        self.room_temperature.clicked.connect(self.Room_temp)
+        
         self.heater_on = QtWidgets.QLabel(self.Room_Conditions)
         self.heater_on.setGeometry(QtCore.QRect(230, 310, 61, 61))
         self.heater_on.setStyleSheet("font: 75 26pt \"Moon\";\n"
@@ -383,11 +400,18 @@ class Ui_system(object):
 "color: rgb(255, 255, 255);\n"
 "")
         self.run_eco_level.setObjectName("run_eco_level")
+        self.run_eco_level.setText("--")
+
+        self.run_eco_level.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        
         self.open_ubidots = QtWidgets.QPushButton(self.Room_Conditions)
         self.open_ubidots.setGeometry(QtCore.QRect(230, 460, 361, 51))
         self.open_ubidots.setStyleSheet("color: rgb(255, 255, 255);\n"
 "font: 11pt \"Big John\";")
         self.open_ubidots.setObjectName("open_ubidots")
+
+        self.open_ubidots.clicked.connect(self.Open_ubidots)
+        
         system.addItem(self.Room_Conditions, "")
 
         self.retranslateUi(system)
@@ -704,35 +728,222 @@ class Ui_system(object):
         if (self.eco < 1):
             self.eco = 1 
             self.eco_level.setNum(self.eco)
-            filename1 = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+            self.run_eco_level.setNum(self.eco)
+            filename1 = datetime.datetime.now().strftime("%Y.%m.%d_%H:%M")
             save_path = 'Logs/'
-            complete_path = os.path.join(save_path, filename1+'.txt')
+            complete_path = os.path.join(save_path, filename1+'.log')
             f = open(complete_path, 'w')
             if (self.t == 0) or (self.c == 0) or (self.b == 0):
                 f.write('Data Unavailable, running in economy level 1')
             else:
-                f.write('Average Temperature is: ' + str(self.t) + '\n')
-                f.write('Average Cloud Cover is: ' + str(self.c) + '\n')
-                f.write('Battery level is: ' + str(self.b) + '\n')
+                f.write('Average Temperature is: ' + str(self.t) + ' °C' + '\n')
+                f.write('Average Cloud Cover is: ' + str(self.c) + ' %' + '\n')
+                f.write('Battery level is: ' + str(self.b) + '%' + '\n')
                 f.write('Economy Level is: ' + str(self.eco) + '\n')
                 f.close()
-            
+                   
         else:
             self.eco_level.setNum(self.eco)
-            filename1 = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+            self.run_eco_level.setNum(self.eco)
+            filename1 = datetime.datetime.now().strftime("%Y.%m.%d_%H:%M")
             save_path = 'Logs/'
             complete_path = os.path.join(save_path, filename1+'.txt')
             f = open(complete_path, 'w')
             if (self.t == 0) or (self.c == 0) or (self.b == 0):
                 f.write('Data Unavailable, running in economy level 1')
             else:
-                f.write('Average Temperature is: ' + str(self.t) + '\n')
-                f.write('Average Cloud Cover is: ' + str(self.c) + '\n')
-                f.write('Battery level is: ' + str(self.b) + '\n')
+                f.write('Average Temperature is: ' + str(self.t) + ' °C' + '\n')
+                f.write('Average Cloud Cover is: ' + str(self.c) + ' %' + '\n')
+                f.write('Battery level is: ' + str(self.b) + ' % ' + '\n')
                 f.write('Economy Level is: ' + str(self.eco) + '\n')
                 f.close()
+                                
+    def Room_temp(self):
+        f = open('Ubidots_APIkey.txt', 'r')
+        apikey = f.readline().strip()
+        f.close()
+        api = ApiClient(token = apikey)
+
+        try:
+            roomtemp = api.get_variable("58d763b8762542260a851bd1")
+        except ValueError:
+            print('Unable to obtain variable')
+            
+        PORT = '/dev/ttyUSB0'
+        BAUD_RATE = 9600
+         
+        # Open serial port
+        ser = serial.Serial(PORT, BAUD_RATE)
+
+        if ser.isOpen():
+            ser.close()
+        ser.open()
+        ser.isOpen()
+        ser.write('s'.encode())
+        time.sleep(2)
+        response = ser.readline().strip().decode()
+        self.roomt = float(response[5:])
+
+        try:
+            roomtemp.save_value({'value': self.roomt})
+            print('Value',roomt, 'sent')
+            time.sleep(2)
+        except:
+            print('Value not sent')
+
+        self.room_temp.setText(format(self.roomt,'.2f'))    
+        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/G284654CCK1E77kbBR7zmpBDNkw', new = 2)    
+
+    def Room_hum(self):
+        f = open('Ubidots_APIkey.txt', 'r')
+        apikey = f.readline().strip()
+        f.close()
+        api = ApiClient(token = apikey)
+
+        try:
+            roomhumidity = api.get_variable("58d763c57625422609b8d088")
+        except ValueError:
+            print('Unable to obtain variable')
         
+        PORT = '/dev/ttyUSB0'
+        BAUD_RATE = 9600
+         
+        # Open serial port
+        ser = serial.Serial(PORT, BAUD_RATE)
         
+        if ser.isOpen():
+            ser.close()
+        ser.open()
+        ser.isOpen()
+        ser.write('s'.encode())
+        time.sleep(2)
+        response = ser.readline().strip().decode()
+        self.roomh = float(response[:5])
+
+        try:
+            roomhumidity.save_value({'value': self.roomh})
+            print('Value',self.roomh, 'sent')
+            time.sleep(2)
+        except:
+            print('Value not sent')
+
+        self.room_humidity_2.setText(format(self.roomh,'.2f'))
+        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/qgaJ95jUNq91E3aVxJsNo7NphbU', new = 2)    
+
+    def Open_ubidots(self):
+        webbrowser.open('https://app.ubidots.com/ubi/public/getdashboard/page/P8OAd8cR6dtoL6aO4AQ384euynE', new = 2)
+
+    def Run_System(self):
+        self.cooler_on.setText('')
+        self.heater_on.setText('')
+        self.humid_on.setText('')
+        self.dehumid_on.setText('')
+        self.cooler_off.setText('')
+        self.heater_off.setText('')
+        self.humid_off.setText('')
+        self.dehumid_off.setText('')
+        
+        if (self.eco < 1):
+            self.run_eco_level.setText('--')
+        
+        elif (self.eco == 1):
+            t = self.roomt
+            h = self.roomh
+            
+            if (t > 35):
+                ser.write('c'.encode())
+                self.cooler_on.setText('ON')
+                self.heater_off.setText('OFF')
+                
+            if (t < 15):
+                ser.write('f'.encode())
+                self.heater_on.setText('ON')
+                self.cooler_off.setText('OFF')
+                
+            if (h < 25):
+                ser.write('h'.encode())
+                self.humid_on.setText('ON')
+                self.dehumid_off.setText('OFF')
+                
+            if (h > 80):
+                ser.write('e'.encode())
+                self.dehumid_on.setText('ON')
+                self.humid_off.setText('OFF')
+
+        elif (self.eco == 2):
+            t = self.roomt
+            h = self.roomh
+            
+            if (t > 32):
+                ser.write('c'.encode())
+                self.cooler_on.setText('ON')
+                self.heater_off.setText('OFF')
+                
+            if (t < 18):
+                ser.write('f'.encode())
+                self.heater_on.setText('ON')
+                self.cooler_off.setText('OFF')
+                
+            if (h < 30):
+                ser.write('h'.encode())
+                self.humid_on.setText('ON')
+                self.dehumid_off.setText('OFF')
+                
+            if (h > 70):
+                ser.write('e'.encode())
+                self.dehumid_on.setText('ON')
+                self.humid_off.setText('OFF')
+
+        elif (self.eco == 3):
+            t = self.roomt
+            h = self.roomh
+            
+            if (t > 30):
+                ser.write('c'.encode())
+                self.cooler_on.setText('ON')
+                self.heater_off.setText('OFF')
+                
+            if (t < 20):
+                ser.write('f'.encode())
+                self.heater_on.setText('ON')
+                self.cooler_off.setText('OFF')
+                
+            if (h < 40):
+                ser.write('h'.encode())
+                self.humid_on.setText('ON')
+                self.dehumid_off.setText('OFF')
+                
+            if (h > 60):
+                ser.write('e'.encode())
+                self.dehumid_on.setText('ON')
+                self.humid_off.setText('OFF')
+        
+
+        elif (self.eco == 4):
+            t = self.roomt
+            h = self.roomh
+            
+            if (t > 27):
+                ser.write('c'.encode())
+                self.cooler_on.setText('ON')
+                self.heater_off.setText('OFF')
+                
+            if (t < 22):
+                ser.write('f'.encode())
+                self.heater_on.setText('ON')
+                self.cooler_off.setText('OFF')
+                
+            if (h < 25):
+                ser.write('h'.encode())
+                self.humid_on.setText('ON')
+                self.dehumid_off.setText('OFF')
+                
+            if (h > 50):
+                ser.write('e'.encode())
+                self.dehumid_on.setText('ON')
+                self.humid_off.setText('OFF')
+            
+            
 import system_rc
 
 if __name__ == "__main__":
@@ -744,4 +955,3 @@ if __name__ == "__main__":
     system.move(QApplication.desktop().screen().rect().center() - system.rect().center())
     system.show()
     sys.exit(app.exec_())
-

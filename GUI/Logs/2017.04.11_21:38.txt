@@ -1,0 +1,4 @@
+Average Temperature is: 29.34 °C
+Average Cloud Cover is: 0.43 %
+Battery level is: 10 % 
+Economy Level is: 2
