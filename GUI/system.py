@@ -23,6 +23,13 @@ import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import os.path
 import serial
+import time
+
+# OLED modules
+import Adafruit_SSD1306
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 class MovieSplashScreen(QSplashScreen):
 
@@ -118,6 +125,10 @@ class Ui_system(object):
         self.run_system.setObjectName("run_system")
 
         self.run_system.clicked.connect(self.Run_System)
+        self.timer5 = QtCore.QTimer()
+        self.timer5.setInterval(1000 * 120)
+        self.timer5.timeout.connect(self.Run_System)
+        self.timer5.start()
         
         self.avg_temp = QtWidgets.QLabel(self.Fuzzy_system)
         self.avg_temp.setGeometry(QtCore.QRect(0, 100, 121, 51))
@@ -541,9 +552,81 @@ class Ui_system(object):
         else:
             print('No Hourly data')
 
+        # Raspberry Pi pin configuration:
+        RST = 32
+
+        # 128x32 display with hardware I2C:
+        disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
+
+        # Import SPI library (for hardware SPI) and MCP3008 library.
+        import Adafruit_GPIO.SPI as SPI
+        import Adafruit_MCP3008
+
+        # Initialize library.
+        disp.begin()
+        time.sleep(5)
+
+        width = disp.width
+        height = disp.height
+
+        # Clear display.
+        disp.clear()
+        disp.display()
+
+        image = Image.new('1', (width, height))
+
+        # Get drawing object to draw on image.
+        draw = ImageDraw.Draw(image)
+
+        # Load default font.
+        font = ImageFont.load_default()
+
+        # Alternatively load a TTF font.  Make sure the .ttf font file is in the same directory as the python script!
+        # Some other nice fonts to try: http://www.dafont.com/bitmap.php
+        #font = ImageFont.truetype('Minecraftia.ttf', 8)
+
+        # Hardware SPI configuration:
+        SPI_PORT   = 0
+        SPI_DEVICE = 0
+        mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+
+        # Main program loop.
+        time.sleep(3)
+        # Draw a black filled box to clear the image.
+        draw.rectangle((0,0,width,height), outline=0, fill=0)
+        value = mcp.read_adc(0)
+        volts = ((value*3.3)) / float(1023) #voltage divider voltage
+        volts = volts * 5.7 #actual voltage
+        volts = round(volts,2)
+        if (volts >=13.6):
+            batt = 100
+            print('100% Battery')
+            draw.text((0, 0), 'Battery percent at: ',font=font, fill = 255)
+            draw.text((50, 20),str(batt) , font=font, fill = 255)
+            disp.image(image)
+            disp.display()
+            time.sleep(1)
+        elif (volts > 11.6):
+            batt = round ((volts - 11.6) * 50,1)
+            print(batt,'% Battery')
+            draw.text((10, 0), 'Battery percent at: ',font=font, fill = 255)
+            draw.text((45, 20),str(batt) , font=font, fill = 255)
+            disp.image(image)
+            disp.display()
+            time.sleep(1)
+        else:
+            print('Connection Error')
+            draw.text((55, 10),':(' , font=font, fill = 255)
+            disp.image(image)
+            disp.display()
+            # Print the ADC values.
+            # Pause time.
+            time.sleep(1)
+            
         self.t = round(tempc / 48, 2)
         self.c = round(clouds / 48, 2)
-        self.b = 10
+        self.b = volts
+        
         try:
             temp.save_value({'value': self.t})
             cloud_cover.save_value({'value': self.c})
@@ -606,7 +689,78 @@ class Ui_system(object):
         except ValueError:
             print('Value Error')
             
-        battery = 40
+        # Raspberry Pi pin configuration:
+        RST = 32
+
+        # 128x32 display with hardware I2C:
+        disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
+
+        # Import SPI library (for hardware SPI) and MCP3008 library.
+        import Adafruit_GPIO.SPI as SPI
+        import Adafruit_MCP3008
+
+        # Initialize library.
+        disp.begin()
+        time.sleep(5)
+
+        width = disp.width
+        height = disp.height
+
+        # Clear display.
+        disp.clear()
+        disp.display()
+
+        image = Image.new('1', (width, height))
+
+        # Get drawing object to draw on image.
+        draw = ImageDraw.Draw(image)
+
+        # Load default font.
+        font = ImageFont.load_default()
+
+        # Alternatively load a TTF font.  Make sure the .ttf font file is in the same directory as the python script!
+        # Some other nice fonts to try: http://www.dafont.com/bitmap.php
+        #font = ImageFont.truetype('Minecraftia.ttf', 8)
+
+        # Hardware SPI configuration:
+        SPI_PORT   = 0
+        SPI_DEVICE = 0
+        mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+
+        # Main program loop.
+        time.sleep(3)
+        # Draw a black filled box to clear the image.
+        draw.rectangle((0,0,width,height), outline=0, fill=0)
+        value = mcp.read_adc(0)
+        volts = ((value*3.3)) / float(1023) #voltage divider voltage
+        volts = volts * 5.7 #actual voltage
+        volts = round(volts,2)
+        if (volts >=13.6):
+            batt = 100
+            print('100% Battery')
+            draw.text((0, 0), 'Battery percent at: ',font=font, fill = 255)
+            draw.text((50, 20),str(batt) , font=font, fill = 255)
+            disp.image(image)
+            disp.display()
+            time.sleep(1)
+        elif (volts > 11.6):
+            batt = round ((volts - 11.6) * 50,1)
+            print(batt,'% Battery')
+            draw.text((10, 0), 'Battery percent at: ',font=font, fill = 255)
+            draw.text((45, 20),str(batt) , font=font, fill = 255)
+            disp.image(image)
+            disp.display()
+            time.sleep(1)
+        else:
+            print('Connection Error')
+            draw.text((55, 10),':(' , font=font, fill = 255)
+            disp.image(image)
+            disp.display()
+            # Print the ADC values.
+            # Pause time.
+            time.sleep(1)
+
+            battery = volts
         
         try:
             batt.save_value({'value': battery})
@@ -833,6 +987,21 @@ class Ui_system(object):
     def Open_ubidots(self):
         webbrowser.open('https://app.ubidots.com/ubi/public/getdashboard/page/P8OAd8cR6dtoL6aO4AQ384euynE', new = 2)
 
+    def loading3(self):
+        
+        self.done3 = False
+        movie = QMovie("Icons/loading.gif")
+        splash = MovieSplashScreen(movie)
+        splash.setMask(splash.mask())
+        splash.show()
+
+        test1 = Thread(target = self.Run_System).start()
+
+        while not self.done1:
+            app.processEvents()
+               
+        splash.finish(system)
+        
     def Run_System(self):
         self.cooler_on.setText('')
         self.heater_on.setText('')
@@ -842,7 +1011,8 @@ class Ui_system(object):
         self.heater_off.setText('')
         self.humid_off.setText('')
         self.dehumid_off.setText('')
-        
+        self.Room_temp()
+        self.Room_hum()
         if (self.eco < 1):
             self.run_eco_level.setText('--')
         
@@ -918,7 +1088,6 @@ class Ui_system(object):
                 self.dehumid_on.setText('ON')
                 self.humid_off.setText('OFF')
         
-
         elif (self.eco == 4):
             t = self.roomt
             h = self.roomh
@@ -942,8 +1111,9 @@ class Ui_system(object):
                 ser.write('e'.encode())
                 self.dehumid_on.setText('ON')
                 self.humid_off.setText('OFF')
-            
-            
+
+        self.done2 = True
+                
 import system_rc
 
 if __name__ == "__main__":
