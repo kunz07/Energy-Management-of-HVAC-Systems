@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'system.ui'
+# Form implementation generated from reading ui file 'final.ui'
 #
 # Created by: PyQt5 UI code generator 5.8.1
 #
@@ -22,10 +22,6 @@ import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import os.path
-
-import time
-
-
 
 class MovieSplashScreen(QSplashScreen):
 
@@ -57,7 +53,7 @@ class MovieSplashScreen(QSplashScreen):
     
     def mousePressEvent(self, mouse_event):
         pass
-        
+
 class Ui_system(object):
     done1 = False
     done2 = False
@@ -71,7 +67,7 @@ class Ui_system(object):
     def setupUi(self, system):
         system.setObjectName("system")
         system.resize(800, 600)
-        system.setWindowTitle("Energy Management System")
+        system.setToolTip("")
         system.setStyleSheet("background-color: rgb(44, 0, 30);")
         self.Fuzzy_system = QtWidgets.QWidget()
         self.Fuzzy_system.setEnabled(True)
@@ -120,54 +116,54 @@ class Ui_system(object):
 "font: 11pt \"Big John\";")
         self.run_system.setObjectName("run_system")
 
-        self.run_system.clicked.connect(self.Run_System)
+        self.run_system.clicked.connect(self.loading3)
         self.timer5 = QtCore.QTimer()
-        self.timer5.setInterval(1000 * 120)
-        self.timer5.timeout.connect(self.Run_System)
+        self.timer5.setInterval(1000 * 300)
+        self.timer5.timeout.connect(self.loading3)
         self.timer5.start()
         
-        self.avg_temp = QtWidgets.QLabel(self.Fuzzy_system)
-        self.avg_temp.setGeometry(QtCore.QRect(0, 100, 121, 51))
-        self.avg_temp.setStyleSheet("font: 75 32pt \"Moon\";\n"
+        self.avg_temp_txt = QtWidgets.QLabel(self.Fuzzy_system)
+        self.avg_temp_txt.setGeometry(QtCore.QRect(0, 100, 121, 51))
+        self.avg_temp_txt.setStyleSheet("font: 75 32pt \"Moon\";\n"
 "color:rgbrgb(85, 85, 255);")
-        self.avg_temp.setObjectName("avg_temp")
+        self.avg_temp_txt.setObjectName("avg_temp_txt")
 
-        self.avg_temp.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.avg_temp_txt.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         
         self.temp_icon = QtWidgets.QLabel(self.Fuzzy_system)
         self.temp_icon.setGeometry(QtCore.QRect(340, 110, 32, 32))
         self.temp_icon.setStyleSheet("font: 26pt \"Big John\";\n"
 "color:rgb(174, 167, 159)")
         self.temp_icon.setObjectName("temp_icon")
-        self.avg_cc = QtWidgets.QLabel(self.Fuzzy_system)
-        self.avg_cc.setGeometry(QtCore.QRect(0, 170, 121, 51))
-        self.avg_cc.setStyleSheet("font: 75 32pt \"Moon\";\n"
+        self.avg_cc_txt = QtWidgets.QLabel(self.Fuzzy_system)
+        self.avg_cc_txt.setGeometry(QtCore.QRect(0, 170, 121, 51))
+        self.avg_cc_txt.setStyleSheet("font: 75 32pt \"Moon\";\n"
 "color:rgb(85, 85, 255);")
-        self.avg_cc.setObjectName("avg_cc")
+        self.avg_cc_txt.setObjectName("avg_cc_txt")
 
-        self.avg_cc.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.avg_cc_txt.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         
-        self.avg_batt = QtWidgets.QLabel(self.Fuzzy_system)
-        self.avg_batt.setGeometry(QtCore.QRect(0, 240, 121, 51))
-        self.avg_batt.setStyleSheet("font: 75 32pt \"Moon\";\n"
+        self.avg_batt_txt = QtWidgets.QLabel(self.Fuzzy_system)
+        self.avg_batt_txt.setGeometry(QtCore.QRect(0, 240, 121, 51))
+        self.avg_batt_txt.setStyleSheet("font: 75 32pt \"Moon\";\n"
 "color:rgb(85, 85, 255);")
-        self.avg_batt.setObjectName("avg_batt")
+        self.avg_batt_txt.setObjectName("avg_batt_txt")
 
-        self.avg_batt.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-
+        self.avg_batt_txt.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        
         self.timer3 = QtCore.QTimer()
         self.timer3.setInterval(1000 * 900)
         self.timer3.timeout.connect(self.Update_Battery)
         self.timer3.start()
         
-        self.battery_percent = QtWidgets.QPushButton(self.Fuzzy_system)
-        self.battery_percent.setGeometry(QtCore.QRect(120, 250, 221, 32))
-        self.battery_percent.setStyleSheet("font: 75 11pt \"Moon\";\n"
+        self.battery_percent_but = QtWidgets.QPushButton(self.Fuzzy_system)
+        self.battery_percent_but.setGeometry(QtCore.QRect(120, 250, 221, 32))
+        self.battery_percent_but.setStyleSheet("font: 75 11pt \"Moon\";\n"
 "color: rgb(200, 226, 240);")
 
-        self.battery_percent.clicked.connect(self.Batt_Percent)
+        self.battery_percent_but.clicked.connect(self.Batt_Percent)
         
-        self.battery_percent.setObjectName("battery_percent")        
+        self.battery_percent_but.setObjectName("battery_percent_but")
         self.batt_icon = QtWidgets.QLabel(self.Fuzzy_system)
         self.batt_icon.setGeometry(QtCore.QRect(340, 250, 32, 32))
         self.batt_icon.setStyleSheet("font: 26pt \"Big John\";\n"
@@ -178,76 +174,79 @@ class Ui_system(object):
         self.cloud_icon.setStyleSheet("font: 26pt \"Big John\";\n"
 "color:rgb(174, 167, 159)")
         self.cloud_icon.setObjectName("cloud_icon")
-        self.average_cloud_cover = QtWidgets.QPushButton(self.Fuzzy_system)
-        self.average_cloud_cover.setGeometry(QtCore.QRect(120, 180, 221, 32))
-        self.average_cloud_cover.setStyleSheet("font: 75 11pt \"Moon\";\n"
+        self.average_cc_but = QtWidgets.QPushButton(self.Fuzzy_system)
+        self.average_cc_but.setGeometry(QtCore.QRect(120, 180, 221, 32))
+        self.average_cc_but.setStyleSheet("font: 75 11pt \"Moon\";\n"
 "color: rgb(200, 226, 240);")
-        self.average_cloud_cover.setObjectName("average_cloud_cover")
+        self.average_cc_but.setObjectName("average_cc_but")
 
-        self.average_cloud_cover.clicked.connect(self.Avg_CC)
+        self.average_cc_but.clicked.connect(self.Avg_CC)
         
-        self.defuzz = QtWidgets.QLabel(self.Fuzzy_system)
-        self.defuzz.setGeometry(QtCore.QRect(240, 380, 161, 71))
-        self.defuzz.setStyleSheet("font: 40pt \"Big John\";\n"
+        self.defuzz_txt = QtWidgets.QLabel(self.Fuzzy_system)
+        self.defuzz_txt.setGeometry(QtCore.QRect(240, 380, 161, 71))
+        self.defuzz_txt.setStyleSheet("font: 40pt \"Big John\";\n"
 "color:rgb(238, 247, 251);")
-        self.defuzz.setObjectName("defuzz")        
-        self.defuzzification = QtWidgets.QPushButton(self.Fuzzy_system)
-        self.defuzzification.setGeometry(QtCore.QRect(50, 400, 179, 32))
-        self.defuzzification.setStyleSheet("font: 11pt \"Peace Sans\";\n"
+        self.defuzz_txt.setObjectName("defuzz_txt")
+        self.defuzz_but = QtWidgets.QPushButton(self.Fuzzy_system)
+        self.defuzz_but.setGeometry(QtCore.QRect(50, 400, 179, 32))
+        self.defuzz_but.setStyleSheet("font: 11pt \"Peace Sans\";\n"
 "color: rgb(34, 139, 34)")
-        self.defuzzification.setObjectName("defuzzification")
+        self.defuzz_but.setObjectName("defuzz_but")
 
-        self.defuzzification.clicked.connect(self.Defuzz)
+        self.defuzz_but.clicked.connect(self.Defuzz)
         
-        self.economy_level = QtWidgets.QPushButton(self.Fuzzy_system)
-        self.economy_level.setGeometry(QtCore.QRect(450, 400, 179, 32))
-        self.economy_level.setStyleSheet("font: 11pt \"Peace Sans\";\n"
+        self.eco_level_but = QtWidgets.QPushButton(self.Fuzzy_system)
+        self.eco_level_but.setGeometry(QtCore.QRect(450, 400, 179, 32))
+        self.eco_level_but.setStyleSheet("font: 11pt \"Peace Sans\";\n"
 "color: rgb(34, 139, 34)")
-        self.economy_level.setObjectName("economy_level")
+        self.eco_level_but.setObjectName("eco_level_but")
 
-        self.economy_level.clicked.connect(self.Eco)
+        self.eco_level_but.clicked.connect(self.Eco)
         
-        self.temperature = QtWidgets.QPushButton(self.Fuzzy_system)
-        self.temperature.setGeometry(QtCore.QRect(500, 200, 161, 26))
-        self.temperature.setStyleSheet("color:rgb(200, 226, 240);\n"
+        self.temp_but = QtWidgets.QPushButton(self.Fuzzy_system)
+        self.temp_but.setGeometry(QtCore.QRect(500, 200, 161, 26))
+        self.temp_but.setStyleSheet("color:rgb(200, 226, 240);\n"
 "font: 75 11pt \"Moon\";")
-        self.temperature.setObjectName("temperature")
-        self.average_temperature = QtWidgets.QPushButton(self.Fuzzy_system)
-        self.average_temperature.setGeometry(QtCore.QRect(120, 110, 221, 32))
-        self.average_temperature.setStyleSheet("font: 75 11pt \"Moon\";\n"
+        self.temp_but.setObjectName("temp_but")
+
+        self.temp_but.clicked.connect(self.DarkSky)
+        
+        self.average_temp_but = QtWidgets.QPushButton(self.Fuzzy_system)
+        self.average_temp_but.setGeometry(QtCore.QRect(120, 110, 221, 32))
+        self.average_temp_but.setStyleSheet("font: 75 11pt \"Moon\";\n"
 "color: rgb(200, 226, 240);")
-        self.average_temperature.setObjectName("average_temperature")
+        self.average_temp_but.setObjectName("average_temp_but")
 
-        self.average_temperature.clicked.connect(self.Avg_temp)
+        self.average_temp_but.clicked.connect(self.Avg_temp)
         
-        self.cloud_cover = QtWidgets.QPushButton(self.Fuzzy_system)
-        self.cloud_cover.setGeometry(QtCore.QRect(500, 270, 161, 26))
-        self.cloud_cover.setStyleSheet("color:rgb(200, 226, 240);\n"
+        self.cloud_cover_but = QtWidgets.QPushButton(self.Fuzzy_system)
+        self.cloud_cover_but.setGeometry(QtCore.QRect(500, 270, 161, 26))
+        self.cloud_cover_but.setStyleSheet("color:rgb(200, 226, 240);\n"
 "font: 75 11pt \"Moon\";")
-        self.cloud_cover.setObjectName("cloud_cover")
+        self.cloud_cover_but.setObjectName("cloud_cover_but")
 
-        self.cloud_cover.clicked.connect(self.DarkSky)
+        self.cloud_cover_but.clicked.connect(self.DarkSky)
         
-        self.temp = QtWidgets.QLabel(self.Fuzzy_system)
-        self.temp.setGeometry(QtCore.QRect(662, 180, 131, 61))
-        self.temp.setStyleSheet("font: 75 32pt \"Moon\";\n"
+        self.temp_text = QtWidgets.QLabel(self.Fuzzy_system)
+        self.temp_text.setGeometry(QtCore.QRect(662, 180, 131, 61))
+        self.temp_text.setStyleSheet("font: 75 32pt \"Moon\";\n"
 "color:rgb(233, 99, 94);")
-        self.temp.setObjectName("temp")
+        self.temp_text.setObjectName("temp_text")
 
-        self.temp.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.temp_text.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         
-        self.eco_level = QtWidgets.QLabel(self.Fuzzy_system)
-        self.eco_level.setGeometry(QtCore.QRect(640, 380, 61, 71))
-        self.eco_level.setStyleSheet("font: 40pt \"Big John\";\n"
+        self.eco_level_txt = QtWidgets.QLabel(self.Fuzzy_system)
+        self.eco_level_txt.setGeometry(QtCore.QRect(640, 380, 61, 71))
+        self.eco_level_txt.setStyleSheet("font: 40pt \"Big John\";\n"
 "color:rgb(238, 247, 251);")
-        self.eco_level.setObjectName("eco_level")
-        self.cc = QtWidgets.QLabel(self.Fuzzy_system)
-        self.cc.setGeometry(QtCore.QRect(662, 250, 131, 61))
-        self.cc.setStyleSheet("font: 75 32pt \"Moon\";\n"
+        self.eco_level_txt.setObjectName("eco_level_txt")
+        self.cloud_cover_txt = QtWidgets.QLabel(self.Fuzzy_system)
+        self.cloud_cover_txt.setGeometry(QtCore.QRect(662, 250, 131, 61))
+        self.cloud_cover_txt.setStyleSheet("font: 75 32pt \"Moon\";\n"
 "color:rgb(233, 99, 94);")
-        self.cc.setObjectName("cc")
+        self.cloud_cover_txt.setObjectName("cloud_cover_txt")
 
-        self.cc.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.cloud_cover_txt.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         
         self.refresh_current = QtWidgets.QToolButton(self.Fuzzy_system)
         self.refresh_current.setGeometry(QtCore.QRect(610, 330, 88, 31))
@@ -256,84 +255,93 @@ class Ui_system(object):
         self.refresh_current.setObjectName("refresh_current")
 
         self.refresh_current.clicked.connect(self.loading2)
+        
+        self.refresh_avg = QtWidgets.QToolButton(self.Fuzzy_system)
+        self.refresh_avg.setGeometry(QtCore.QRect(150, 300, 88, 31))
+        self.refresh_avg.setStyleSheet("font: 11pt \"Peace Sans\";\n"
+"color: rgb(34, 139, 34)")
+        self.refresh_avg.setObjectName("refresh_avg")
+
+        self.refresh_avg.clicked.connect(self.loading1)
 
         self.timer4 = QtCore.QTimer()
-        self.timer4.setInterval(1000 * 3600)
-        self.timer4.timeout.connect(self.Update_Current)
+        self.timer4.setInterval(1000 * 86400)
+        self.timer4.timeout.connect(self.loading1)
         self.timer4.start()
         
-        self.refresh_current_2 = QtWidgets.QToolButton(self.Fuzzy_system)
-        self.refresh_current_2.setGeometry(QtCore.QRect(150, 300, 88, 31))
-        self.refresh_current_2.setStyleSheet("font: 11pt \"Peace Sans\";\n"
-"color: rgb(34, 139, 34)")
-        self.refresh_current_2.setObjectName("refresh_current_2")
+        self.dark_sky_1 = QtWidgets.QToolButton(self.Fuzzy_system)
+        self.dark_sky_1.setGeometry(QtCore.QRect(640, 510, 158, 23))
+        self.dark_sky_1.setStyleSheet("font: 25 10pt \"Ubuntu\";\n"
+"color: rgb(85, 170, 255)")
+        self.dark_sky_1.setObjectName("dark_sky_1")
 
-        self.refresh_current_2.clicked.connect(self.loading1)
+        self.dark_sky_1.clicked.connect(self.DarkSky)
         
         self.title_1.raise_()
         self.time_hours.raise_()
         self.time_min.raise_()
         self.date.raise_()
         self.run_system.raise_()
-        self.avg_temp.raise_()
-        self.avg_cc.raise_()
-        self.avg_batt.raise_()
-        self.defuzz.raise_()
-        self.average_temperature.raise_()
+        self.avg_temp_txt.raise_()
+        self.avg_cc_txt.raise_()
+        self.avg_batt_txt.raise_()
+        self.defuzz_txt.raise_()
+        self.average_temp_but.raise_()
         self.temp_icon.raise_()
-        self.average_cloud_cover.raise_()
+        self.average_cc_but.raise_()
         self.cloud_icon.raise_()
-        self.battery_percent.raise_()
+        self.battery_percent_but.raise_()
         self.batt_icon.raise_()
-        self.cloud_cover.raise_()
-        self.temp.raise_()
-        self.defuzzification.raise_()
-        self.economy_level.raise_()
-        self.eco_level.raise_()
-        self.temperature.raise_()
-        self.cc.raise_()
+        self.cloud_cover_but.raise_()
+        self.temp_text.raise_()
+        self.defuzz_but.raise_()
+        self.eco_level_but.raise_()
+        self.eco_level_txt.raise_()
+        self.temp_but.raise_()
+        self.cloud_cover_txt.raise_()
         self.refresh_current.raise_()
-        self.refresh_current_2.raise_()
+        self.refresh_avg.raise_()
+        self.dark_sky_1.raise_()
         system.addItem(self.Fuzzy_system, "")
         self.Room_Conditions = QtWidgets.QWidget()
-        self.Room_Conditions.setGeometry(QtCore.QRect(0, 0, 100, 30))
+        self.Room_Conditions.setGeometry(QtCore.QRect(0, 0, 800, 538))
         self.Room_Conditions.setObjectName("Room_Conditions")
         self.title_2 = QtWidgets.QLabel(self.Room_Conditions)
         self.title_2.setGeometry(QtCore.QRect(130, -20, 521, 85))
         self.title_2.setStyleSheet("font: 36pt \"Peace Sans\";\n"
 "color: rgb(233, 84, 32);")
         self.title_2.setObjectName("title_2")
-        self.room_temp = QtWidgets.QLabel(self.Room_Conditions)
-        self.room_temp.setGeometry(QtCore.QRect(2, 90, 131, 61))
-        self.room_temp.setStyleSheet("font: 75 32pt \"Moon\";\n"
+        self.room_temp_txt = QtWidgets.QLabel(self.Room_Conditions)
+        self.room_temp_txt.setGeometry(QtCore.QRect(2, 90, 131, 61))
+        self.room_temp_txt.setStyleSheet("font: 75 32pt \"Moon\";\n"
 "color:rgb(238, 247, 251);")
-        self.room_temp.setObjectName("room_temp")
+        self.room_temp_txt.setObjectName("room_temp_txt")
 
-        self.room_temp.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.room_temp_txt.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         
-        self.room_humidity = QtWidgets.QPushButton(self.Room_Conditions)
-        self.room_humidity.setGeometry(QtCore.QRect(490, 110, 161, 26))
-        self.room_humidity.setStyleSheet("color:rgb(233, 99, 94);\n"
+        self.room_hum_but = QtWidgets.QPushButton(self.Room_Conditions)
+        self.room_hum_but.setGeometry(QtCore.QRect(490, 110, 161, 26))
+        self.room_hum_but.setStyleSheet("color:rgb(233, 99, 94);\n"
 "font: 75 11pt \"Moon\";")
-        self.room_humidity.setObjectName("room_humidity")
+        self.room_hum_but.setObjectName("room_hum_but")
 
-        self.room_humidity.clicked.connect(self.Room_hum)
+        self.room_hum_but.clicked.connect(self.Room_hum_browser)
         
-        self.room_humidity_2 = QtWidgets.QLabel(self.Room_Conditions)
-        self.room_humidity_2.setGeometry(QtCore.QRect(660, 90, 131, 61))
-        self.room_humidity_2.setStyleSheet("font: 75 32pt \"Moon\";\n"
+        self.room_hum_txt = QtWidgets.QLabel(self.Room_Conditions)
+        self.room_hum_txt.setGeometry(QtCore.QRect(660, 90, 131, 61))
+        self.room_hum_txt.setStyleSheet("font: 75 32pt \"Moon\";\n"
 "color:rgb(238, 247, 251);")
-        self.room_humidity_2.setObjectName("room_humidity_2")
+        self.room_hum_txt.setObjectName("room_hum_txt")
 
-        self.room_humidity_2.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.room_hum_txt.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         
-        self.room_temperature = QtWidgets.QPushButton(self.Room_Conditions)
-        self.room_temperature.setGeometry(QtCore.QRect(140, 110, 161, 26))
-        self.room_temperature.setStyleSheet("color:rgb(233, 99, 94);\n"
+        self.room_temp_but = QtWidgets.QPushButton(self.Room_Conditions)
+        self.room_temp_but.setGeometry(QtCore.QRect(140, 110, 161, 26))
+        self.room_temp_but.setStyleSheet("color:rgb(233, 99, 94);\n"
 "font: 75 11pt \"Moon\";")
-        self.room_temperature.setObjectName("room_temperature")
+        self.room_temp_but.setObjectName("room_temp_but")
 
-        self.room_temperature.clicked.connect(self.Room_temp)
+        self.room_temp_but.clicked.connect(self.Room_temp_browser)
         
         self.heater_on = QtWidgets.QLabel(self.Room_Conditions)
         self.heater_on.setGeometry(QtCore.QRect(230, 310, 61, 61))
@@ -407,10 +415,11 @@ class Ui_system(object):
 "color: rgb(255, 255, 255);\n"
 "")
         self.run_eco_level.setObjectName("run_eco_level")
+
+        self.run_eco_level.setObjectName("run_eco_level")
         self.run_eco_level.setText("--")
 
         self.run_eco_level.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-        
         self.open_ubidots = QtWidgets.QPushButton(self.Room_Conditions)
         self.open_ubidots.setGeometry(QtCore.QRect(230, 460, 361, 51))
         self.open_ubidots.setStyleSheet("color: rgb(255, 255, 255);\n"
@@ -419,6 +428,11 @@ class Ui_system(object):
 
         self.open_ubidots.clicked.connect(self.Open_ubidots)
         
+        self.dark_sky_2 = QtWidgets.QToolButton(self.Room_Conditions)
+        self.dark_sky_2.setGeometry(QtCore.QRect(640, 490, 158, 23))
+        self.dark_sky_2.setStyleSheet("font: 25 10pt \"Ubuntu\";\n"
+"color: rgb(85, 170, 255)")
+        self.dark_sky_2.setObjectName("dark_sky_2")
         system.addItem(self.Room_Conditions, "")
 
         self.retranslateUi(system)
@@ -430,44 +444,46 @@ class Ui_system(object):
         system.setWindowTitle(_translate("system", "ToolBox"))
         self.title_1.setText(_translate("system", "SYSTEM VARIABLES"))
         self.time_hours.setText(_translate("system", "<html><head/><body><p align=\"right\"><br/></p></body></html>"))
-        self.run_system.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">COMPUTE ECONOMY LEVEL</span></p></body></html>"))
+        self.run_system.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">RUN SYSTEM IN OBTAINED ECONOMY LEVEL</span></p></body></html>"))
         self.run_system.setText(_translate("system", "RUN SYSTEM"))
-        self.avg_temp.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
+        self.avg_temp_txt.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
         self.temp_icon.setText(_translate("system", "<html><head/><body><p><img src=\":/icons/Icons/thermometer.png\"/></p></body></html>"))
-        self.avg_cc.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
-        self.avg_batt.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
-        self.battery_percent.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT</span></p></body></html>"))
-        self.battery_percent.setText(_translate("system", "BATTERY PERCENTAGE"))
+        self.avg_cc_txt.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
+        self.avg_batt_txt.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
+        self.battery_percent_but.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT IN UBIDOTS</span></p></body></html>"))
+        self.battery_percent_but.setText(_translate("system", "BATTERY PERCENTAGE"))
         self.batt_icon.setText(_translate("system", "<html><head/><body><p><img src=\":/icons/Icons/battery.png\"/></p></body></html>"))
         self.cloud_icon.setText(_translate("system", "<html><head/><body><p><img src=\":/icons/Icons/cloudy.png\"/></p></body></html>"))
-        self.average_cloud_cover.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT</span></p></body></html>"))
-        self.average_cloud_cover.setText(_translate("system", "AVERAGE CLOUD COVER"))
-        self.defuzz.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
-        self.defuzzification.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">COMPUTE VALUE</span></p></body></html>"))
-        self.defuzzification.setText(_translate("system", "DEFUZZIFICATION"))
-        self.economy_level.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">OPEN LOG DATA</span></p></body></html>"))
-        self.economy_level.setText(_translate("system", "ECONOMY LEVEL"))
-        self.temperature.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">WEATHER FORECAST</span></p></body></html>"))
-        self.temperature.setText(_translate("system", "TEMPERATURE"))
-        self.average_temperature.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420; border:none;\">VIEW PLOT</span></p></body></html>"))
-        self.average_temperature.setText(_translate("system", "AVERAGE TEMPERATURE"))
-        self.cloud_cover.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">WEATHER FORECAST</span></p></body></html>"))
-        self.cloud_cover.setText(_translate("system", "CLOUD COVER"))
-        self.temp.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
-        self.eco_level.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
-        self.cc.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
+        self.average_cc_but.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT IN UBIDOTS</span></p></body></html>"))
+        self.average_cc_but.setText(_translate("system", "AVERAGE CLOUD COVER"))
+        self.defuzz_txt.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
+        self.defuzz_but.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">DEFUZZIFY THE INPUTS</span></p></body></html>"))
+        self.defuzz_but.setText(_translate("system", "DEFUZZIFICATION"))
+        self.eco_level_but.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">Log DATA</span></p></body></html>"))
+        self.eco_level_but.setText(_translate("system", "ECONOMY LEVEL"))
+        self.temp_but.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">WEATHER FORECAST</span></p></body></html>"))
+        self.temp_but.setText(_translate("system", "TEMPERATURE"))
+        self.average_temp_but.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT IN UBIDOTS</span></p></body></html>"))
+        self.average_temp_but.setText(_translate("system", "AVERAGE TEMPERATURE"))
+        self.cloud_cover_but.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">WEATHER FORECAST</span></p></body></html>"))
+        self.cloud_cover_but.setText(_translate("system", "CLOUD COVER"))
+        self.temp_text.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
+        self.eco_level_txt.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
+        self.cloud_cover_txt.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
         self.refresh_current.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">REFRESH DATA</span></p></body></html>"))
         self.refresh_current.setText(_translate("system", "REFRESH"))
-        self.refresh_current_2.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">REFRESH DATA</span></p></body></html>"))
-        self.refresh_current_2.setText(_translate("system", "REFRESH"))
+        self.refresh_avg.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">REFRESH DATA</span></p></body></html>"))
+        self.refresh_avg.setText(_translate("system", "REFRESH"))
+        self.dark_sky_1.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">DARK SKY</span></p></body></html>"))
+        self.dark_sky_1.setText(_translate("system", "POWERED BY DARK SKY"))
         system.setItemText(system.indexOf(self.Fuzzy_system), _translate("system", "Page 1"))
         self.title_2.setText(_translate("system", "ROOM CONDITIONS"))
-        self.room_temp.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
-        self.room_humidity.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT</span></p></body></html>"))
-        self.room_humidity.setText(_translate("system", "HUMIDITY"))
-        self.room_humidity_2.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
-        self.room_temperature.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT</span></p></body></html>"))
-        self.room_temperature.setText(_translate("system", "TEMPERATURE"))
+        self.room_temp_txt.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
+        self.room_hum_but.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT IN UBIDOTS</span></p></body></html>"))
+        self.room_hum_but.setText(_translate("system", "HUMIDITY"))
+        self.room_hum_txt.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
+        self.room_temp_but.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT IN UBIDOTS</span></p></body></html>"))
+        self.room_temp_but.setText(_translate("system", "TEMPERATURE"))
         self.heater_on.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
         self.cooler_on.setText(_translate("system", "<html><head/><body><p><br/></p></body></html>"))
         self.heater_off.setText(_translate("system", "<html><head/><body><p align=\"right\"><br/></p></body></html>"))
@@ -487,17 +503,22 @@ class Ui_system(object):
         self.running.setText(_translate("system", "<html><head/><body><p align=\"center\">RUNNING IN ECONOMY LEVEL</p></body></html>"))
         self.run_eco_level.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">VIEW PLOT</span></p></body></html>"))
         self.run_eco_level.setText(_translate("system", "<html><head/><body><p align=\"center\"><br/></p></body></html>"))
-        self.open_ubidots.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">OPEN IN WEB BROWSER</span></p></body></html>"))
+        self.open_ubidots.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">OPEN UBIDOTS IN WEB BROWSER</span></p></body></html>"))
         self.open_ubidots.setText(_translate("system", "OPEN UBIDOTS"))
+        self.dark_sky_2.setToolTip(_translate("system", "<html><head/><body><p align=\"center\"><span style=\" font-family:\'Moon\'; font-size:9pt; font-weight:600; color:#e95420;\">DARK SKY</span></p></body></html>"))
+        self.dark_sky_2.setText(_translate("system", "POWERED BY DARK SKY"))
         system.setItemText(system.indexOf(self.Room_Conditions), _translate("system", "Page 2"))
-        
+
+    def DarkSky(self):
+        webbrowser.open('https://darksky.net/poweredby/', new = 2)
+
     def Time(self):
         self.time_hours.setText(QtCore.QTime.currentTime().toString("h"))
         self.time_min.setText(QtCore.QTime.currentTime().toString("mm"))
 
     def Date(self):
         self.date.setText(QtCore.QDate.currentDate().toString("ddd, MMM d"))
-        
+
     def loading1(self):
         
         self.done1 = False
@@ -547,11 +568,10 @@ class Ui_system(object):
                 clouds = clouds + float(str(hourly.get_hour(hour)['cloudCover']))
         else:
             print('No Hourly data')
-
             
         self.t = round(tempc / 48, 2)
         self.c = round(clouds / 48, 2)
-        self.b = 40
+        self.b = self.Update_Battery()
         
         try:
             temp.save_value({'value': self.t})
@@ -561,9 +581,9 @@ class Ui_system(object):
         except:
             print('Value not sent')
         
-        self.avg_temp.setText('{:0.01f}°'.format(self.t))
-        self.avg_cc.setText('{}%'.format(int(self.c*100)))
-        self.avg_batt.setText('{}%'.format(self.b))
+        self.avg_temp_txt.setText('{:0.01f}°'.format(self.t))
+        self.avg_cc_txt.setText('{}%'.format(int(self.c*100)))
+        self.avg_batt_txt.setText('{}%'.format(self.b))
         
         self.done1 = True
 
@@ -582,28 +602,15 @@ class Ui_system(object):
                
         splash.finish(system)
 
-        
-    def Update_Current(self):
-        f = open('DS_APIkey.txt','r')
-        apikey = f.read()
-        f.close()
+    def Batt_Percent(self):
+        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/R2kbUV5P5DSJVlXdTfMOXflxNtM', new = 2)
 
-        Bangalore = [12.9716, 77.5946]
+    def Avg_CC(self):
+        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/0f62Hh2lV0PMO8-p_X7DYFyNnd4', new = 2)
 
-        fio = ForecastIO.ForecastIO(apikey,
-                                    units=ForecastIO.ForecastIO.UNITS_SI,
-                                    lang=ForecastIO.ForecastIO.LANG_ENGLISH,
-                                    latitude=Bangalore[0], longitude=Bangalore[1],
-                                    )
-        if fio.has_currently() is True:
-            currently = FIOCurrently.FIOCurrently(fio)
-            self.temp.setText('{:0.01f}°'.format(currently.temperature))
-            self.cc.setText('{}%'.format(int(currently.cloudCover * 100)))
-        else:
-            print('No Currently data')
+    def Avg_temp(self):
+        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/DlD6wC0uiipZzD3nbBT_Xty6myk', new = 2)
 
-        self.done2 = True
-   
     def Update_Battery(self):
         f = open('Ubidots_APIkey.txt', 'r')
         apikey = f.readline().strip()
@@ -694,19 +701,28 @@ class Ui_system(object):
         except:
             print('Unable to connect to Ubidots batt')
         
-        self.avg_batt.setText('{}%'.format(battery))
+        self.avg_batt_txt.setText('{}%'.format(battery))
 
-    def DarkSky(self):
-        webbrowser.open('https://darksky.net', new = 2)
+    def Update_Current(self):
+        f = open('DS_APIkey.txt','r')
+        apikey = f.read()
+        f.close()
 
-    def Batt_Percent(self):
-        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/R2kbUV5P5DSJVlXdTfMOXflxNtM', new = 2)
+        Bangalore = [12.9716, 77.5946]
 
-    def Avg_CC(self):
-        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/0f62Hh2lV0PMO8-p_X7DYFyNnd4', new = 2)
+        fio = ForecastIO.ForecastIO(apikey,
+                                    units=ForecastIO.ForecastIO.UNITS_SI,
+                                    lang=ForecastIO.ForecastIO.LANG_ENGLISH,
+                                    latitude=Bangalore[0], longitude=Bangalore[1],
+                                    )
+        if fio.has_currently() is True:
+            currently = FIOCurrently.FIOCurrently(fio)
+            self.temp_text.setText('{:0.01f}°'.format(currently.temperature))
+            self.cloud_cover_txt.setText('{}%'.format(int(currently.cloudCover * 100)))
+        else:
+            print('No Currently data')
 
-    def Avg_temp(self):
-        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/DlD6wC0uiipZzD3nbBT_Xty6myk', new = 2)
+        self.done2 = True
 
     def Defuzz(self):
         # New Antecedent/Consequent objects hold universe variables and membership
@@ -801,13 +817,13 @@ class Ui_system(object):
 
         defuzz = eco_mode.output['Economy_level']
 
-        self.defuzz.setText(format(defuzz,'.2f'))
+        self.defuzz_txt.setText(format(defuzz,'.2f'))
         self.eco = int(defuzz + 0.5)
 
     def Eco(self):
         if (self.eco < 1):
             self.eco = 1 
-            self.eco_level.setNum(self.eco)
+            self.eco_level_txt.setNum(self.eco)
             self.run_eco_level.setNum(self.eco)
             filename1 = datetime.datetime.now().strftime("%Y.%m.%d_%H:%M")
             save_path = 'Logs/'
@@ -823,7 +839,7 @@ class Ui_system(object):
                 f.close()
                    
         else:
-            self.eco_level.setNum(self.eco)
+            self.eco_level_txt.setNum(self.eco)
             self.run_eco_level.setNum(self.eco)
             filename1 = datetime.datetime.now().strftime("%Y.%m.%d_%H:%M")
             save_path = 'Logs/'
@@ -837,8 +853,8 @@ class Ui_system(object):
                 f.write('Battery level is: ' + str(self.b) + ' % ' + '\n')
                 f.write('Economy Level is: ' + str(self.eco) + '\n')
                 f.close()
-                                
-    def Room_temp(self):
+                           
+    def Room_cond(self):
         f = open('Ubidots_APIkey.txt', 'r')
         apikey = f.readline().strip()
         f.close()
@@ -846,46 +862,28 @@ class Ui_system(object):
 
         try:
             roomtemp = api.get_variable("58d763b8762542260a851bd1")
-        except ValueError:
-            print('Unable to obtain variable')
-            
-        self.roomt = 35
-
-        try:
-            roomtemp.save_value({'value': self.roomt})
-            print('Value',roomt, 'sent')
-            time.sleep(2)
-        except:
-            print('Value not sent')
-
-        self.room_temp.setText(format(self.roomt,'.2f'))    
-        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/G284654CCK1E77kbBR7zmpBDNkw', new = 2)    
-
-    def Room_hum(self):
-        f = open('Ubidots_APIkey.txt', 'r')
-        apikey = f.readline().strip()
-        f.close()
-        api = ApiClient(token = apikey)
-
-        try:
             roomhumidity = api.get_variable("58d763c57625422609b8d088")
         except ValueError:
             print('Unable to obtain variable')
-        
-        self.roomh = 60
+            
+        self.roomt = 45
+        self.roomh = 17
 
         try:
+            roomtemp.save_value({'value': self.roomt})
             roomhumidity.save_value({'value': self.roomh})
-            print('Value',self.roomh, 'sent')
-            time.sleep(2)
+            time.sleep(1)
         except:
-            print('Value not sent')
+            pass
 
-        self.room_humidity_2.setText(format(self.roomh,'.2f'))
-        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/qgaJ95jUNq91E3aVxJsNo7NphbU', new = 2)    
+        self.room_temp_txt.setText(format(self.roomt,'.2f'))  
+        self.room_hum_txt.setText(format(self.roomh,'.2f'))
 
-    def Open_ubidots(self):
-        webbrowser.open('https://app.ubidots.com/ubi/public/getdashboard/page/P8OAd8cR6dtoL6aO4AQ384euynE', new = 2)
+    def Room_temp_browser(self):
+        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/G284654CCK1E77kbBR7zmpBDNkw', new = 2)
+
+    def Room_hum_browser(self):
+        webbrowser.open('https://app.ubidots.com/ubi/getchart/page/qgaJ95jUNq91E3aVxJsNo7NphbU', new = 2)
 
     def loading3(self):
         
@@ -897,12 +895,20 @@ class Ui_system(object):
 
         test1 = Thread(target = self.Run_System).start()
 
-        while not self.done1:
+        while not self.done3:
             app.processEvents()
                
         splash.finish(system)
         
     def Run_System(self):
+        f = open('Ubidots_APIkey.txt', 'r')
+        apikey = f.readline().strip()
+        f.close()
+        api = ApiClient(token = apikey)
+
+        one = 1
+        zero = 0
+        
         self.cooler_on.setText('')
         self.heater_on.setText('')
         self.humid_on.setText('')
@@ -911,98 +917,215 @@ class Ui_system(object):
         self.heater_off.setText('')
         self.humid_off.setText('')
         self.dehumid_off.setText('')
-        self.Room_temp()
-        self.Room_hum()
+        self.Room_cond()
+
+        try:
+            cooler = api.get_variable("58d768e0762542260a855c7a")
+            heater = api.get_variable("58d768eb7625422609b91152")
+            humidifier = api.get_variable("58d768f8762542260cf3b292")
+            exhaust = api.get_variable("58d76907762542260dfad769")
+            time.sleep(2)
+    
+        except ValueError:
+            print('Unable to obtain variable')
+
+        cooler.save_value({'value': 0})
+        heater.save_value({'value': 0})
+        humidifier.save_value({'value': 0})
+        exhaust.save_value({'value': 0})
+
         if (self.eco < 1):
             self.run_eco_level.setText('--')
         
         elif (self.eco == 1):
             t = self.roomt
             h = self.roomh
+
+            self.done3 = True
             
-            if (t > 35):
+            if (t >= 35):
                 self.cooler_on.setText('ON')
                 self.heater_off.setText('OFF')
+                cooler.save_value({'value': 1})
+                heater.save_value({'value': 0})
+                time.sleep(1)
                 
-            if (t < 15):
+            if (t <= 15):
                 self.heater_on.setText('ON')
                 self.cooler_off.setText('OFF')
+                heater.save_value({'value': 1})
+                cooler.save_value({'value': 0})
+                time.sleep(1)
                 
-            if (h < 25):
+            if (h <= 25):
                 self.humid_on.setText('ON')
                 self.dehumid_off.setText('OFF')
-                
-            if (h > 80):
+                humidifier.save_value({'value': 1})
+                exhaust.save_value({'value': 0})
+                time.sleep(1)
+                                
+            if (h >= 80):
                 self.dehumid_on.setText('ON')
                 self.humid_off.setText('OFF')
+                exhaust.save_value({'value': 1})
+                humidifier.save_value({'value': 0})
+                time.sleep(1)
+
+            if ((h > 25 and h < 80)):
+                self.humid_off.setText('OFF')
+                self.dehumid_off.setText('OFF')
+                humidifier.save_value({'value': 0})
+                exhaust.save_value({'value': 0})
+                time.sleep(1)
+
+            if ((t > 15) and (t < 35)):
+                self.cooler_off.setText('OFF')
+                self.heater_off.setText('OFF')
+                cooler.save_value({'value': 0})
+                heater.save_value({'value': 0})
+                time.sleep(1)
 
         elif (self.eco == 2):
             t = self.roomt
             h = self.roomh
             
-            if (t > 32):
+            if (t >= 32):
                 self.cooler_on.setText('ON')
                 self.heater_off.setText('OFF')
+                cooler.save_value({'value': 1})
+                heater.save_value({'value': 0})
+                time.sleep(1)
                 
-            if (t < 18):
+            if (t <= 18):
                 self.heater_on.setText('ON')
                 self.cooler_off.setText('OFF')
+                heater.save_value({'value': 1})
+                cooler.save_value({'value': 0})
+                time.sleep(1)
                 
-            if (h < 30):
+            if (h <= 30):
                 self.humid_on.setText('ON')
                 self.dehumid_off.setText('OFF')
-                
-            if (h > 70):
+                humidifier.save_value({'value': 1})
+                exhaust.save_value({'value': 0})
+                time.sleep(1)
+                              
+            if (h >= 70):
                 self.dehumid_on.setText('ON')
                 self.humid_off.setText('OFF')
-                
+                exhaust.save_value({'value': 1})
+                humidifier.save_value({'value': 0})
+                time.sleep(1)
+
+            if ((h > 30 and h < 70)):
+                self.humid_off.setText('OFF')
+                self.dehumid_off.setText('OFF')
+                exhaust.save_value({'value': 0})
+                humidifier.save_value({'value': 0})
+                time.sleep(1)
+
+            if ((t > 18) and (t < 32)):
+                self.cooler_off.setText('OFF')
+                self.heater_off.setText('OFF')
+                cooler.save_value({'value': 0})
+                heater.save_value({'value': 0})
+                time.sleep(1)                
 
         elif (self.eco == 3):
             t = self.roomt
             h = self.roomh
             
-            if (t > 30):
+            if (t >= 30):
                 self.cooler_on.setText('ON')
                 self.heater_off.setText('OFF')
+                cooler.save_value({'value': 1})
+                heater.save_value({'value': 0})
+                time.sleep(1)
                 
-            if (t < 20):
+            if (t <= 20):
                 self.heater_on.setText('ON')
                 self.cooler_off.setText('OFF')
+                heater.save_value({'value': 1})
+                cooler.save_value({'value': 0})
+                time.sleep(1)
                 
-            if (h < 40):
+            if (h <= 40):
                 self.humid_on.setText('ON')
                 self.dehumid_off.setText('OFF')
+                humidifier.save_value({'value': 1})
+                exhaust.save_value({'value': 0})
+                time.sleep(1)
                 
-            if (h > 60):
+            if (h >= 60):
                 self.dehumid_on.setText('ON')
                 self.humid_off.setText('OFF')
+                exhaust.save_value({'value': 1})
+                humidifier.save_value({'value': 0})
+                time.sleep(1)
 
-            if ((h>40) and (h<60)):
-                self.dehumid_off.setText('OFF')
+            if ((h > 40 and h < 60)):
                 self.humid_off.setText('OFF')
-        
+                self.dehumid_off.setText('OFF')
+                exhaust.save_value({'value': 0})
+                humidifier.save_value({'value': 0})
+                time.sleep(1)
+
+            if ((t > 20) and (t < 30)):
+                self.cooler_off.setText('OFF')
+                self.heater_off.setText('OFF')
+                cooler.save_value({'value': 0})
+                heater.save_value({'value': 0})
+                time.sleep(1) 
+
         elif (self.eco == 4):
             t = self.roomt
             h = self.roomh
             
-            if (t > 27):
+            if (t >= 27):
                 self.cooler_on.setText('ON')
                 self.heater_off.setText('OFF')
+                cooler.save_value({'value': 1})
+                heater.save_value({'value': 0})
+                time.sleep(1)
                 
-            if (t < 22):
+            if (t <= 22):
                 self.heater_on.setText('ON')
                 self.cooler_off.setText('OFF')
+                heater.save_value({'value': 1})
+                cooler.save_value({'value': 0})
+                time.sleep(1)
                 
-            if (h < 25):
+            if (h <= 25):
                 self.humid_on.setText('ON')
                 self.dehumid_off.setText('OFF')
+                humidifier.save_value({'value': 1})
+                exhaust.save_value({'value': 0})
+                time.sleep(1)
                 
-            if (h > 50):
+            if (h >= 50):
                 self.dehumid_on.setText('ON')
                 self.humid_off.setText('OFF')
+                exhaust.save_value({'value': 1})
+                humidifier.save_value({'value': 0})
+                time.sleep(1)
 
-        self.done2 = True
-                
+            if ((h > 25) and (h < 50)):
+                self.humid_off.setText('OFF')
+                self.dehumid_off.setText('OFF')
+                exhaust.save_value({'value': 0})
+                humidifier.save_value({'value': 0})
+                time.sleep(1)
+
+            if ((t > 22) and (t < 27)):
+                self.cooler_off.setText('OFF')
+                self.heater_off.setText('OFF')
+                cooler.save_value({'value': 0})
+                heater.save_value({'value': 0})
+                time.sleep(1) 
+
+    def Open_ubidots(self):
+        webbrowser.open('https://app.ubidots.com/ubi/public/getdashboard/page/P8OAd8cR6dtoL6aO4AQ384euynE', new = 2)
+
 import system_rc
 
 if __name__ == "__main__":
