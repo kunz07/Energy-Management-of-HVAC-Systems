@@ -6,25 +6,23 @@
 
 import time
 import serial
-import Fuzzy
 
 hour = 3600
-PORT = '/dev/ttyUSB0'
+PORT = '/dev/ttyUSB1'
 BAUD_RATE = 9600
  
 # Open serial port
 ser = serial.Serial(PORT, BAUD_RATE)
  
 def getSensorData():
-    if ser.isOpen():
-        ser.close()
+    ser.close()
     ser.open()
-    ser.isOpen()
     ser.write('s'.encode())
     time.sleep(2)
     response = ser.readline().strip().decode()
-    hum = float(response[:5])
-    temp = float(response[5:])
+    hum = 50
+    temp = 30
+    print(hum, temp)
     return (hum, temp)
 
 def level_1():
@@ -75,7 +73,7 @@ def level_4():
         ser.write('e'.encode())
     time.sleep(300)
 def getLevel():
-    return (int(fuzzy.level))
+    return 1
 
 if __name__ == "__main__":
     level = getLevel()
