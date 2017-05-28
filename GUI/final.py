@@ -22,6 +22,26 @@ import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import os.path
+import serial
+
+# Import SPI library (for hardware SPI) and MCP3008 library.
+import Adafruit_SSD1306
+# Raspberry Pi pin configuration:
+RST = 32
+
+# 128x32 display with hardware I2C:
+disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
+import Adafruit_GPIO.SPI as SPI
+import Adafruit_MCP3008
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
+
+PORT = '/dev/ttyUSB0'
+BAUD_RATE = 9600
+ 
+# Open serial port
+ser = serial.Serial(PORT, BAUD_RATE)
 
 class MovieSplashScreen(QSplashScreen):
 
@@ -116,10 +136,10 @@ class Ui_system(object):
 "font: 11pt \"Big John\";")
         self.run_system.setObjectName("run_system")
 
-        self.run_system.clicked.connect(self.loading3)
+        self.run_system.clicked.connect(self.Run_System)
         self.timer5 = QtCore.QTimer()
         self.timer5.setInterval(1000 * 300)
-        self.timer5.timeout.connect(self.loading3)
+        self.timer5.timeout.connect(self.Run_System)
         self.timer5.start()
         
         self.avg_temp_txt = QtWidgets.QLabel(self.Fuzzy_system)
@@ -622,16 +642,6 @@ class Ui_system(object):
         except ValueError:
             print('Value Error')
             
-        # Raspberry Pi pin configuration:
-        RST = 32
-
-        # 128x32 display with hardware I2C:
-        disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
-
-        # Import SPI library (for hardware SPI) and MCP3008 library.
-        import Adafruit_GPIO.SPI as SPI
-        import Adafruit_MCP3008
-
         # Initialize library.
         disp.begin()
         time.sleep(5)
@@ -661,7 +671,7 @@ class Ui_system(object):
         mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
         # Main program loop.
-        time.sleep(3)
+        time.sleep(2)
         # Draw a black filled box to clear the image.
         draw.rectangle((0,0,width,height), outline=0, fill=0)
         value = mcp.read_adc(0)
@@ -685,6 +695,7 @@ class Ui_system(object):
             disp.display()
             time.sleep(1)
         else:
+            batt = 0
             print('Connection Error')
             draw.text((55, 10),':(' , font=font, fill = 255)
             disp.image(image)
@@ -693,15 +704,7 @@ class Ui_system(object):
             # Pause time.
             time.sleep(1)
 
-            battery = volts
-        
-        try:
-            batt.save_value({'value': battery})
-            time.sleep(1)
-        except:
-            print('Unable to connect to Ubidots batt')
-        
-        self.avg_batt_txt.setText('{}%'.format(battery))
+        return(batt)
 
     def Update_Current(self):
         f = open('DS_APIkey.txt','r')
@@ -855,6 +858,16 @@ class Ui_system(object):
                 f.close()
                            
     def Room_cond(self):
+        if ser.isOpen():
+            ser.close()
+        ser.open()
+        ser.isOpen()
+        ser.write('s'.encode())
+        time.sleep(2)
+        response = ser.readline().strip().decode()
+        hum = float(response[:5])
+        temp = float(response[5:])
+        
         f = open('Ubidots_APIkey.txt', 'r')
         apikey = f.readline().strip()
         f.close()
@@ -866,8 +879,8 @@ class Ui_system(object):
         except ValueError:
             print('Unable to obtain variable')
             
-        self.roomt = 45
-        self.roomh = 17
+        self.roomt = temp
+        self.roomh = hum
 
         try:
             roomtemp.save_value({'value': self.roomt})
@@ -885,38 +898,20 @@ class Ui_system(object):
     def Room_hum_browser(self):
         webbrowser.open('https://app.ubidots.com/ubi/getchart/page/qgaJ95jUNq91E3aVxJsNo7NphbU', new = 2)
 
-    def loading3(self):
-        
-        self.done3 = False
-        movie = QMovie("Icons/loading.gif")
-        splash = MovieSplashScreen(movie)
-        splash.setMask(splash.mask())
-        splash.show()
-
-        test1 = Thread(target = self.Run_System).start()
-
-        while not self.done3:
-            app.processEvents()
-               
-        splash.finish(system)
-        
     def Run_System(self):
         f = open('Ubidots_APIkey.txt', 'r')
         apikey = f.readline().strip()
         f.close()
         api = ApiClient(token = apikey)
-
-        one = 1
-        zero = 0
         
-        self.cooler_on.setText('')
-        self.heater_on.setText('')
-        self.humid_on.setText('')
-        self.dehumid_on.setText('')
-        self.cooler_off.setText('')
-        self.heater_off.setText('')
-        self.humid_off.setText('')
-        self.dehumid_off.setText('')
+        self.cooler_on.setText(' ')
+        self.heater_on.setText(' ')
+        self.humid_on.setText(' ')
+        self.dehumid_on.setText(' ')
+        self.cooler_off.setText(' ')
+        self.heater_off.setText(' ')
+        self.humid_off.setText(' ')
+        self.dehumid_off.setText(' ')
         self.Room_cond()
 
         try:
@@ -924,7 +919,6 @@ class Ui_system(object):
             heater = api.get_variable("58d768eb7625422609b91152")
             humidifier = api.get_variable("58d768f8762542260cf3b292")
             exhaust = api.get_variable("58d76907762542260dfad769")
-            time.sleep(2)
     
         except ValueError:
             print('Unable to obtain variable')
@@ -940,10 +934,9 @@ class Ui_system(object):
         elif (self.eco == 1):
             t = self.roomt
             h = self.roomh
-
-            self.done3 = True
             
             if (t >= 35):
+                ser.write('c'.encode())
                 self.cooler_on.setText('ON')
                 self.heater_off.setText('OFF')
                 cooler.save_value({'value': 1})
@@ -951,6 +944,7 @@ class Ui_system(object):
                 time.sleep(1)
                 
             if (t <= 15):
+                ser.write('f'.encode())
                 self.heater_on.setText('ON')
                 self.cooler_off.setText('OFF')
                 heater.save_value({'value': 1})
@@ -958,6 +952,7 @@ class Ui_system(object):
                 time.sleep(1)
                 
             if (h <= 25):
+                ser.write('h'.encode())
                 self.humid_on.setText('ON')
                 self.dehumid_off.setText('OFF')
                 humidifier.save_value({'value': 1})
@@ -965,6 +960,7 @@ class Ui_system(object):
                 time.sleep(1)
                                 
             if (h >= 80):
+                ser.write('e'.encode())
                 self.dehumid_on.setText('ON')
                 self.humid_off.setText('OFF')
                 exhaust.save_value({'value': 1})
@@ -990,6 +986,7 @@ class Ui_system(object):
             h = self.roomh
             
             if (t >= 32):
+                ser.write('c'.encode())
                 self.cooler_on.setText('ON')
                 self.heater_off.setText('OFF')
                 cooler.save_value({'value': 1})
@@ -997,6 +994,7 @@ class Ui_system(object):
                 time.sleep(1)
                 
             if (t <= 18):
+                ser.write('f'.encode())
                 self.heater_on.setText('ON')
                 self.cooler_off.setText('OFF')
                 heater.save_value({'value': 1})
@@ -1004,6 +1002,7 @@ class Ui_system(object):
                 time.sleep(1)
                 
             if (h <= 30):
+                ser.write('h'.encode())
                 self.humid_on.setText('ON')
                 self.dehumid_off.setText('OFF')
                 humidifier.save_value({'value': 1})
@@ -1011,6 +1010,7 @@ class Ui_system(object):
                 time.sleep(1)
                               
             if (h >= 70):
+                ser.write('e'.encode())
                 self.dehumid_on.setText('ON')
                 self.humid_off.setText('OFF')
                 exhaust.save_value({'value': 1})
@@ -1036,6 +1036,7 @@ class Ui_system(object):
             h = self.roomh
             
             if (t >= 30):
+                ser.write('c'.encode())
                 self.cooler_on.setText('ON')
                 self.heater_off.setText('OFF')
                 cooler.save_value({'value': 1})
@@ -1043,6 +1044,7 @@ class Ui_system(object):
                 time.sleep(1)
                 
             if (t <= 20):
+                ser.write('f'.encode())
                 self.heater_on.setText('ON')
                 self.cooler_off.setText('OFF')
                 heater.save_value({'value': 1})
@@ -1050,6 +1052,7 @@ class Ui_system(object):
                 time.sleep(1)
                 
             if (h <= 40):
+                ser.write('h'.encode())
                 self.humid_on.setText('ON')
                 self.dehumid_off.setText('OFF')
                 humidifier.save_value({'value': 1})
@@ -1057,6 +1060,7 @@ class Ui_system(object):
                 time.sleep(1)
                 
             if (h >= 60):
+                ser.write('e'.encode())
                 self.dehumid_on.setText('ON')
                 self.humid_off.setText('OFF')
                 exhaust.save_value({'value': 1})
@@ -1082,6 +1086,7 @@ class Ui_system(object):
             h = self.roomh
             
             if (t >= 27):
+                ser.write('c'.encode())
                 self.cooler_on.setText('ON')
                 self.heater_off.setText('OFF')
                 cooler.save_value({'value': 1})
@@ -1089,6 +1094,7 @@ class Ui_system(object):
                 time.sleep(1)
                 
             if (t <= 22):
+                ser.write('f'.encode())
                 self.heater_on.setText('ON')
                 self.cooler_off.setText('OFF')
                 heater.save_value({'value': 1})
@@ -1096,6 +1102,7 @@ class Ui_system(object):
                 time.sleep(1)
                 
             if (h <= 25):
+                ser.write('h'.encode())
                 self.humid_on.setText('ON')
                 self.dehumid_off.setText('OFF')
                 humidifier.save_value({'value': 1})
@@ -1103,6 +1110,7 @@ class Ui_system(object):
                 time.sleep(1)
                 
             if (h >= 50):
+                ser.write('e'.encode())
                 self.dehumid_on.setText('ON')
                 self.humid_off.setText('OFF')
                 exhaust.save_value({'value': 1})
