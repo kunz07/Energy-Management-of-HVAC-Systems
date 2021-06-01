@@ -32,4 +32,4 @@ six==1.10.0
 spidev==3.2
 stevedore==1.21.0
 ubidots==1.6.6
-urllib3==1.13.1
+urllib3==1.26.5
